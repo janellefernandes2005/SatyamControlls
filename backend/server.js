@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const axios = require('axios');
 const app = express();
 
@@ -22,19 +23,21 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.join(__dirname, '..')));
 
 // ============ CRITICAL FIX: Handle all routes ============
-// This serves home.html for root URL and any non-API/non-file routes
 app.get('*', (req, res, next) => {
-    // Skip API routes - let them be handled by their own routers
+    // Skip API routes
     if (req.path.startsWith('/api')) {
         return next();
     }
     
-    // Skip static files with extensions (CSS, JS, images, etc.)
-    if (req.path.match(/\.(css|js|png|jpg|jpeg|gif|svg|ico|json|map)$/)) {
-        return next();
+    // Check if requested file exists
+    const filePath = path.join(__dirname, '..', req.path);
+    
+    // If it's a file that exists (js, css, html, images, etc.), serve it
+    if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+        return res.sendFile(filePath);
     }
     
-    // For everything else, serve home.html (including root URL)
+    // For everything else (root URL, unknown routes), serve home.html
     res.sendFile(path.join(__dirname, '..', 'home.html'));
 });
 
@@ -267,8 +270,7 @@ app.use((req, res) => {
         });
     }
     
-    // For non-API routes, serve home.html (already handled by the catch-all above)
-    // This is just a fallback
+    // For non-API routes, serve home.html
     res.sendFile(path.join(__dirname, '..', 'home.html'));
 });
 
@@ -286,6 +288,7 @@ const startServer = async () => {
         console.log(`⏰ Started at: ${new Date().toLocaleString()}`);
         console.log('=================================');
         console.log('🌐 Access your website at:');
+        console.log(`   http://localhost:${PORT}`);
         console.log(`   http://localhost:${PORT}/home.html`);
         console.log(`   http://localhost:${PORT}/product.html`);
         console.log(`   http://localhost:${PORT}/contact.html`);
