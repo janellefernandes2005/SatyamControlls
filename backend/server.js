@@ -1,4 +1,4 @@
-// server.js - COMPLETE WITH ALL TRACKING, SENTIMENT, AND ANALYTICS
+// server.js - COMPLETE FIXED VERSION
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -9,7 +9,7 @@ const app = express();
 
 // ============ MIDDLEWARE ============
 app.use(cors({
-    origin: ['http://localhost:8000', 'http://127.0.0.1:8000', 'http://localhost:8500', 'http://127.0.0.1:8500'],
+    origin: ['http://localhost:8000', 'http://127.0.0.1:8000', 'http://localhost:8500', 'http://127.0.0.1:8500', '*'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -17,7 +17,18 @@ app.use(cors({
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-app.use(express.static(path.join(__dirname, '..'))); // Serve frontend files
+
+// ============ SERVE STATIC FILES FIRST (CRITICAL FIX) ============
+// This must come BEFORE API routes to serve HTML files properly
+app.use(express.static(path.join(__dirname, '..'), {
+    index: false, // We'll handle index ourselves
+    extensions: ['html', 'htm']
+}));
+
+// ============ ROOT ROUTE - Serve home.html ============
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'home.html'));
+});
 
 // ============ MONGODB CONNECTION ============
 const connectDB = async () => {
@@ -61,7 +72,7 @@ const contactRoutes = require('./routes/contact');
 const productRoutes = require('./routes/products');
 const trackingRoutes = require('./routes/tracking');
 
-// ============ USE ROUTES ============
+// ============ USE API ROUTES (after static files) ============
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/contact', contactRoutes);
@@ -228,6 +239,17 @@ app.get('/api/admin/dashboard-data', async (req, res) => {
     }
 });
 
+// ============ CATCH-ALL FOR HTML FILES (FALLBACK) ============
+// This ensures any .html file can be accessed directly
+app.get('*.html', (req, res) => {
+    const filePath = path.join(__dirname, '..', req.path);
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            res.status(404).json({ success: false, message: 'Page not found' });
+        }
+    });
+});
+
 // ============ ERROR HANDLING MIDDLEWARE ============
 app.use((err, req, res, next) => {
     console.error('❌ Server Error:', err.stack);
@@ -238,16 +260,16 @@ app.use((err, req, res, next) => {
     });
 });
 
-// ============ 404 HANDLER ============
-app.use((req, res) => {
+// ============ 404 HANDLER - For API routes only ============
+app.use('/api/*', (req, res) => {
     res.status(404).json({
         success: false,
-        message: `Cannot ${req.method} ${req.url}`
+        message: `API endpoint not found: ${req.method} ${req.url}`
     });
 });
 
 // ============ START SERVER ============
-const PORT = 8000;  // FORCED TO 5000
+const PORT = 5000;
 
 const startServer = async () => {
     const dbConnected = await connectDB();
@@ -258,6 +280,15 @@ const startServer = async () => {
         console.log(`📊 Database: ${dbConnected ? '✅ Connected' : '❌ Failed'}`);
         console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
         console.log(`⏰ Started at: ${new Date().toLocaleString()}`);
+        console.log('=================================\n');
+        
+        // Log available frontend files
+        const fs = require('fs');
+        const frontendFiles = fs.readdirSync(path.join(__dirname, '..')).filter(f => f.endsWith('.html'));
+        console.log('📄 Available frontend files:');
+        frontendFiles.forEach(file => {
+            console.log(`   - http://localhost:${PORT}/${file}`);
+        });
         console.log('=================================\n');
     });
 
