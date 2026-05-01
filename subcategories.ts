@@ -1,4 +1,4 @@
-// subcategories.ts - FINAL WORKING VERSION
+// subcategories.ts - COMPLETE WITH GRID RELOAD FIX
 
 interface Subcategory {
     id: string;
@@ -48,7 +48,13 @@ const getSubcategoriesForCategory = (categoryId: string): { name: string, subcat
 // Load and display subcategories
 function loadSubcategoriesGrid() {
     const urlParams = new URLSearchParams(window.location.search);
-    const categoryId = urlParams.get('cat') || 'tube-fittings';
+    let categoryId = urlParams.get('cat') || 'tube-fittings';
+    
+    // Check if we have a saved category from sessionStorage
+    const savedCategory = sessionStorage.getItem('currentSubcategory');
+    if (savedCategory && !urlParams.get('cat')) {
+        categoryId = savedCategory;
+    }
     
     const category = getSubcategoriesForCategory(categoryId);
     const grid = document.getElementById('products-grid-view');
@@ -60,62 +66,67 @@ function loadSubcategoriesGrid() {
     
     if (!grid) return;
     
-    // Clear grid
-    grid.innerHTML = '';
+    // Clear grid and show loading
+    grid.innerHTML = '<div style="text-align: center; padding: 50px;">Loading products...</div>';
     
-    // Add each subcategory card
-    category.subcategories.forEach((sub: Subcategory) => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.style.cssText = 'border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin: 10px; cursor: pointer; transition: transform 0.3s; background: white;';
+    setTimeout(() => {
+        grid.innerHTML = '';
         
-        card.innerHTML = `
-            <div class="image-container" style="text-align: center; height: 180px; display: flex; align-items: center; justify-content: center;">
-                <img src="/api/products/image/${sub.id}" 
-                     alt="${sub.name}"
-                     style="max-width: 100%; max-height: 150px; object-fit: contain;"
-                     onerror="this.src='https://placehold.co/300x200/292C36/FFFFFF?text=${sub.name}'">
-            </div>
-            <div class="product-info" style="text-align: center; margin-top: 15px;">
-                <h3 style="font-size: 16px; margin: 10px 0;">${sub.name}</h3>
-                <p style="font-size: 12px; color: #666;">${sub.material} | ${sub.pressure}</p>
-            </div>
-        `;
-        
-        // Click handler with flag
-        card.addEventListener('click', () => {
-            const productData = {
-                name: sub.name,
-                desc: sub.description,
-                mat: sub.material,
-                press: sub.pressure,
-                temp: sub.temperature,
-                img: `/api/products/image/${sub.id}`
-            };
+        // Add each subcategory card
+        category.subcategories.forEach((sub: Subcategory) => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.style.cssText = 'border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin: 10px; cursor: pointer; transition: transform 0.3s; background: white;';
             
-            localStorage.setItem('selectedProduct', JSON.stringify(productData));
-            // Store the current category to come back to
-            sessionStorage.setItem('returnToCategory', categoryId);
-            sessionStorage.setItem('needsGridReload', 'true');
-            window.location.href = 'product-detail.html';
+            card.innerHTML = `
+                <div class="image-container" style="text-align: center; height: 180px; display: flex; align-items: center; justify-content: center;">
+                    <img src="/api/products/image/${sub.id}" 
+                         alt="${sub.name}"
+                         style="max-width: 100%; max-height: 150px; object-fit: contain;"
+                         onerror="this.src='https://placehold.co/300x200/292C36/FFFFFF?text=${sub.name}'">
+                </div>
+                <div class="product-info" style="text-align: center; margin-top: 15px;">
+                    <h3 style="font-size: 16px; margin: 10px 0;">${sub.name}</h3>
+                    <p style="font-size: 12px; color: #666;">${sub.material} | ${sub.pressure}</p>
+                </div>
+            `;
+            
+            // FIXED: Click handler with proper navigation
+            card.addEventListener('click', () => {
+                // Save current category before leaving
+                sessionStorage.setItem('currentSubcategory', categoryId);
+                sessionStorage.setItem('needsGridReload', 'true');
+                
+                const productData = {
+                    name: sub.name,
+                    desc: sub.description,
+                    mat: sub.material,
+                    press: sub.pressure,
+                    temp: sub.temperature,
+                    img: `/api/products/image/${sub.id}`
+                };
+                
+                localStorage.setItem('selectedProduct', JSON.stringify(productData));
+                window.location.href = 'product-detail.html';
+            });
+            
+            grid.appendChild(card);
         });
         
-        grid.appendChild(card);
-    });
-    
-    console.log(`✅ Loaded ${category.subcategories.length} subcategories for ${category.name}`);
+        console.log(`✅ Loaded ${category.subcategories.length} subcategories for ${category.name}`);
+    }, 100);
 }
 
 // Check if we need to reload the grid (coming back from product detail)
 if (sessionStorage.getItem('needsGridReload') === 'true') {
     sessionStorage.removeItem('needsGridReload');
-    console.log('🔄 Reloading subcategories grid...');
-    // Clear the grid and reload
+    console.log('🔄 Coming back from product detail, reloading grid...');
+    // Clear any cached data
     const grid = document.getElementById('products-grid-view');
     if (grid) {
-        grid.innerHTML = '<div style="text-align: center; padding: 50px;">Loading...</div>';
+        grid.innerHTML = '<div style="text-align: center; padding: 50px;">Reloading...</div>';
     }
-    // Use setTimeout to ensure clean reload
+    // Reload the grid after a small delay
     setTimeout(() => {
         loadSubcategoriesGrid();
     }, 100);
@@ -129,6 +140,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const backBtn = document.querySelector('.back-btn');
     if (backBtn) {
         backBtn.addEventListener('click', () => {
+            sessionStorage.removeItem('currentSubcategory');
+            sessionStorage.removeItem('needsGridReload');
             window.location.href = 'product.html';
         });
     }

@@ -28,8 +28,8 @@
 <body>
     <div class="page-wrapper">
         <div class="immersive-container">
-            <!-- FIXED: Direct navigation to product page with reload flag -->
-            <button class="close-btn" onclick="window.location.href = 'product.html?reload=true'">
+            <!-- FIXED: Returns to the SAME subcategory page -->
+            <button class="close-btn" onclick="goBackToSubcategory()">
                 <i class="fa fa-times"></i> CLOSE
             </button>
             <div class="visual-panel"><img id="p-img" src="" alt="Product"></div>
@@ -48,5 +48,28 @@
     <footer><p>&copy; 2026 Satyam Controls.</p></footer>
     
     <script type="module" src="dist/details.js"></script>
+    
+    <script>
+        function goBackToSubcategory() {
+            // Get the saved category from sessionStorage
+            const savedCategory = sessionStorage.getItem('currentSubcategory');
+            if (savedCategory) {
+                // Go back to the same subcategory page with reload flag
+                window.location.href = `view-category.html?cat=${savedCategory}&reload=true`;
+            } else {
+                // Fallback to products page
+                window.location.href = 'product.html';
+            }
+        }
+        
+        // Check if we're coming back from product detail and need to reload
+        if (sessionStorage.getItem('needsGridReload') === 'true') {
+            sessionStorage.removeItem('needsGridReload');
+            // Force reload the page to refresh the grid
+            setTimeout(() => {
+                location.reload();
+            }, 50);
+        }
+    </script>
 </body>
 </html>
