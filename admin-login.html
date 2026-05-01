@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Login – Glass UI</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+:root{
+    --gunmetal:#292C36;
+}
+
+/* ===== RESET ===== */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI", Arial, sans-serif;
+}
+
+/* ===== BACKGROUND ===== */
+body{
+    height:100vh;
+    background:linear-gradient(135deg,#9ea4ac,#b6bcc4);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* ===== GLASS CARD (MADE BIGGER) ===== */
+.login-box{
+    width:420px; /* Increased from 360px */
+    padding:50px 45px; /* Increased padding */
+    border-radius:20px;
+    text-align:center;
+
+    background:rgba(255,255,255,0.22);
+    backdrop-filter:blur(22px);
+    -webkit-backdrop-filter:blur(22px);
+
+    border:1px solid rgba(255,255,255,0.35);
+    box-shadow:
+        0 30px 60px rgba(41,44,54,0.45),
+        inset 0 1px 1px rgba(255,255,255,0.5);
+}
+
+/* ===== AVATAR WITH EMOJI ===== */
+.avatar-wrapper{
+    position:relative;
+    width:92px;
+    height:92px;
+    margin:10px auto 28px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.avatar{
+    width:92px;
+    height:92px;
+    border-radius:50%;
+    background: rgba(255,255,255,0.35);
+    backdrop-filter: blur(12px);
+    border:1px solid rgba(255,255,255,0.45);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:42px; 
+}
+
+/* ===== INPUTS ===== */
+.input-group{
+    position:relative;
+    margin-bottom:18px;
+}
+
+.input-group i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gunmetal);
+    opacity: 0.65;
+}
+
+.input-group input{
+    width:100%;
+    padding:14px 12px 14px 45px; /* Adjusted padding for icons */
+    background:rgba(255,255,255,0.45);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.4);
+    border-radius:12px;
+    color:var(--gunmetal);
+    font-size:15px;
+    outline:none;
+}
+
+.input-group input::placeholder{
+    color:#444;
+}
+
+/* ===== OPTIONS ===== */
+.options{
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
+    color:var(--gunmetal);
+    margin-bottom:22px;
+}
+
+.options a{
+    color:var(--gunmetal);
+    text-decoration:none;
+}
+
+/* ===== BUTTON ===== */
+.login-btn{
+    width:100%;
+    padding:14px;
+    background:rgba(41,44,54,0.85);
+    backdrop-filter:blur(6px);
+    border:1px solid rgba(255,255,255,0.3);
+    border-radius:24px;
+    color:#fff;
+    font-size:15px;
+    letter-spacing:1px;
+    cursor:pointer;
+
+    box-shadow:
+        0 10px 25px rgba(41,44,54,0.55),
+        inset 0 1px 1px rgba(255,255,255,0.25);
+}
+
+.login-btn:hover{
+    opacity:0.95;
+}
+
+/* ===== ERROR ===== */
+.error{
+    margin-top:14px;
+    font-size:13px;
+    color:#7a0000;
+    display:none;
+}
+</style>
+</head>
+<body>
+
+<div class="login-box">
+
+    <div class="avatar-wrapper">
+        <div class="avatar">👤</div>
+    </div>
+
+    <!-- ADD FORM TAG HERE -->
+    <form id="loginForm">
+        <div class="input-group">
+            <i class="fas fa-user"></i> 
+            <input type="text" id="username" placeholder="Username" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-lock"></i> 
+            <input type="password" id="password" placeholder="Password" required>
+        </div>
+
+        <button type="submit" class="login-btn" id="loginBtn">LOGIN</button>
+    </form>
+    <!-- END FORM -->
+
+    <div class="error" id="error">Invalid username or password</div>
+</div>
+
+<script type="module" src="dist/login.js"></script>
+
+</body>
+</html>

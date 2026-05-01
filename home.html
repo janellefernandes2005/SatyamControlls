@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satyam Controls | Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --jet-stream: #C1D1CF;
+            --dark-jungle: #171F22;
+            --granite-gray: #4A4E49; /* Slightly darker for better readability */
+            --cream-bg: #F9F7F2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            background-color: var(--jet-stream); 
+            font-family: 'Inter', sans-serif; 
+            color: var(--dark-jungle); 
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        nav { 
+            display: flex; 
+            justify-content: flex-end; 
+            padding: 30px 5%; 
+            position: absolute; 
+            width: 100%; 
+            top: 0; 
+            z-index: 100; 
+        }
+        .nav-links { display: flex; list-style: none; gap: 40px; align-items: center; }
+        .nav-links a { 
+            text-decoration: none; 
+            color: var(--dark-jungle); 
+            font-size: 16px; 
+            font-weight: 600; 
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover {
+            color: var(--granite-gray);
+        }
+        .admin-btn { 
+            background: var(--dark-jungle); 
+            color: white !important; 
+            padding: 12px 30px; 
+            border-radius: 30px; 
+            text-decoration: none; 
+            font-size: 15px; 
+            font-weight: 600; 
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .admin-btn:hover {
+            background-color: var(--granite-gray);
+            transform: scale(1.05);
+        }
+
+        /* Hero Section */
+        .hero { 
+            display: flex; 
+            height: 100vh; 
+            width: 100%; 
+            position: relative; 
+            overflow: hidden;
+        }
+
+        .left-side { 
+            flex: 1.1; 
+            position: relative; 
+            max-width: 55vw; 
+        }
+
+        .curve-splash { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: var(--dark-jungle); 
+            clip-path: ellipse(95% 100% at 5% 50%); 
+            z-index: 1; 
+        }
+
+        #canvas-container { 
+            width: 100%; 
+            height: 100%; 
+            z-index: 2; 
+            position: relative; 
+        }
+
+        /* Right Side Text - Increased Sizes */
+        .right-side { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            padding-right: 5%; 
+            padding-left: 3%;
+            z-index: 10; 
+        }
+
+        .hero-content {
+            max-width: 650px; /* Wider content area for bigger text */
+        }
+
+        h1 { 
+            font-family: 'Playfair Display', serif; 
+            font-size: clamp(50px, 6vw, 82px); /* Much larger heading */
+            line-height: 1.05; 
+            margin-bottom: 20px; 
+            letter-spacing: -1px;
+        }
+
+        .tagline { 
+            font-size: clamp(18px, 1.5vw, 22px); /* Larger tagline */
+            color: var(--granite-gray); 
+            margin-bottom: 50px; 
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        /* Feature Grid - More prominent */
+        .feature-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 25px; 
+        }
+
+        .feature-box { 
+            border: 1px solid rgba(23, 31, 34, 0.15); 
+            padding: 30px 25px; 
+            border-radius: 8px; 
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(12px);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .feature-box:hover { 
+            border-color: var(--dark-jungle); 
+            background: white; 
+            transform: translateY(-8px); 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+        }
+
+        .feature-box h4 { 
+            font-size: 15px; 
+            text-transform: uppercase; 
+            margin-bottom: 12px; 
+            font-weight: 700; 
+            letter-spacing: 1px;
+        }
+
+        .feature-box p { 
+            font-size: 16px; /* Increased body text inside boxes */
+            line-height: 1.5; 
+            color: var(--granite-gray); 
+        }
+
+        /* About Us Section */
+        .about-section {
+            padding: 140px 8%;
+            background-color: var(--cream-bg);
+            display: flex;
+            justify-content: center;
+        }
+
+        .about-container {
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .about-content h2 { font-family: 'Playfair Display', serif; font-size: 48px; margin-bottom: 30px; }
+        .about-content p { font-size: 18px; line-height: 1.8; color: var(--granite-gray); margin-bottom: 24px; }
+        
+        .about-image-wrapper { position: relative; }
+        .about-img { 
+            width: 100%; 
+            border-radius: 12px; 
+            z-index: 2; 
+            position: relative; 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.12); 
+            object-fit: cover;
+            aspect-ratio: 4/3;
+        }
+        .image-accent { position: absolute; top: 25px; left: 25px; right: -25px; bottom: -25px; border: 3px solid var(--jet-stream); border-radius: 12px; z-index: 1; }
+
+        footer {
+            background-color: var(--dark-jungle);
+            color: var(--jet-stream);
+            padding: 50px 0;
+            text-align: center;
+            font-size: 15px;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 1100px) {
+            .feature-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 60px; }
+        }
+
+        @media (max-width: 992px) {
+            .hero { flex-direction: column; height: auto; }
+            .left-side { max-width: 100%; height: 60vh; width: 100%; }
+            .curve-splash { clip-path: ellipse(100% 90% at 50% 0%); }
+            .right-side { padding: 80px 8%; width: 100%; }
+            .hero-content { max-width: 100%; }
+            .nav-links { gap: 20px; }
+            nav { padding: 20px 5%; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <ul class="nav-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="product.html">Products</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="admin-login.html" class="admin-btn">ADMIN ⚙️</a></li>
+        </ul>
+    </nav>
+
+    <div class="hero">
+        <div class="left-side">
+            <div class="curve-splash"></div>
+            <div id="canvas-container"></div>
+        </div>
+        <div class="right-side">
+            <div class="hero-content">
+                <h1>Satyam <br> Controls</h1>
+                <p class="tagline">Empowering Industry with Quality & Trust</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-box">
+                        <h4>Quality Products</h4>
+                        <p>High-performance industrial components built for reliability and precision.</p>
+                    </div>
+                    <div class="feature-box">
+                        <h4>Service Provider</h4>
+                        <p>Expert integration and 24/7 technical support systems across all sectors.</p>
+                    </div>
+                    <div class="feature-box">
+                        <h4>Smart Solutions</h4>
+                        <p>Custom-engineered automation tailored specifically to your workflow.</p>
+                    </div>
+                    <div class="feature-box">
+                        <h4>Global Standards</h4>
+                        <p>Strict compliance with international safety and quality control protocols.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="about-section">
+        <div class="about-container">
+            <div class="about-content">
+                <h2>Our Vision for Excellence</h2>
+                <p>Founded with a vision for excellence, Satyam Controls has established itself as a premier provider of industrial automation and control solutions.</p>
+                <p>We specialize in delivering high-precision valves, fittings, and control systems that drive efficiency and reliability across various sectors.</p>
+                <p>At Satyam Controls, we believe in building long-term relationships with our clients by delivering superior products and customized solutions that address unique industrial challenges.</p>
+            </div>
+            <div class="about-image-wrapper">
+                <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=2070&auto=format&fit=crop" alt="Mechanical Industry" class="about-img">
+                <div class="image-accent"></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Satyam Controls. All Rights Reserved.</p>
+    </footer>
+<script>
+    (function() {
+        // Unique Fingerprint Tracking
+        if (!localStorage.getItem('satyam_device_id')) {
+            localStorage.setItem('satyam_device_id', 'DEV-' + Math.random().toString(36).substr(2, 9).toUpperCase());
+        }
+
+        const startTime = Date.now();
+        const pageName = window.location.pathname.split("/").pop() || "index.html";
+
+        window.addEventListener('beforeunload', () => {
+            const timeSpent = Math.round((Date.now() - startTime) / 1000);
+            if (timeSpent > 0) {
+                const logs = JSON.parse(localStorage.getItem('pageLogs') || "[]");
+                logs.push({
+                    fingerprint: localStorage.getItem('satyam_device_id'),
+                    page: pageName,
+                    duration: timeSpent,
+                    timestamp: new Date().toISOString()
+                });
+                if (logs.length > 500) logs.shift(); // Prevent storage bloat
+                localStorage.setItem('pageLogs', JSON.stringify(logs));
+            }
+        });
+    })();
+</script>
+    <script type="module" src="main.js"></script>
+    <script src="chatbot.js"></script>
+</body>
+</html>

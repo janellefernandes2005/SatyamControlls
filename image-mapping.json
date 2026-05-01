@@ -1,0 +1,170 @@
+{
+  "1 Piece Ball Valve": {
+    "id": "6975126bd0195fb59dbeeecf",
+    "url": "http://localhost:5000/api/products/image/6975126bd0195fb59dbeeecf"
+  },
+  "2 Piece Ball Valve": {
+    "id": "6975126cd0195fb59dbeeed1",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeed1"
+  },
+  "2 Valve Manifold": {
+    "id": "6975126cd0195fb59dbeeed3",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeed3"
+  },
+  "3 Piece Ball Valve": {
+    "id": "6975126cd0195fb59dbeeed5",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeed5"
+  },
+  "3 Piece Flanged Ball Valve": {
+    "id": "6975126cd0195fb59dbeeed7",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeed7"
+  },
+  "3 Valve Manifold": {
+    "id": "6975126cd0195fb59dbeeed9",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeed9"
+  },
+  "3 Way Ball Valve": {
+    "id": "6975126cd0195fb59dbeeedb",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeedb"
+  },
+  "5 Valve Manifold": {
+    "id": "6975126cd0195fb59dbeeedd",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeedd"
+  },
+  "Angle Needle Valve": {
+    "id": "6975126cd0195fb59dbeeedf",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeedf"
+  },
+  "Ball Check Valve": {
+    "id": "6975126cd0195fb59dbeeee1",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeee1"
+  },
+  "Ball Valve": {
+    "id": "6975126cd0195fb59dbeeee3",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeee3"
+  },
+  "Brass Needle Valve": {
+    "id": "6975126cd0195fb59dbeeee5",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeee5"
+  },
+  "Butterfly Valves": {
+    "id": "6975126cd0195fb59dbeeee7",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeee7"
+  },
+  "Check Valve": {
+    "id": "6975126cd0195fb59dbeeee9",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeee9"
+  },
+  "Compression Horse Barb": {
+    "id": "6975126cd0195fb59dbeeeeb",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeeeb"
+  },
+  "Compression Male Connector": {
+    "id": "6975126cd0195fb59dbeeeed",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeeed"
+  },
+  "Compression Needle Valve": {
+    "id": "6975126cd0195fb59dbeeeef",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeeef"
+  },
+  "Compression Reducing Union": {
+    "id": "6975126cd0195fb59dbeeef1",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeef1"
+  },
+  "Compression Union": {
+    "id": "6975126cd0195fb59dbeeef3",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeef3"
+  },
+  "Coplanar Manifold": {
+    "id": "6975126cd0195fb59dbeeef5",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeef5"
+  },
+  "Diaphragm Seal": {
+    "id": "6975126cd0195fb59dbeeef7",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeef7"
+  },
+  "Double Block": {
+    "id": "6975126cd0195fb59dbeeef9",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeef9"
+  },
+  "Dual Plate Check Valve": {
+    "id": "6975126cd0195fb59dbeeefb",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeefb"
+  },
+  "Eccentric Plug Valve": {
+    "id": "6975126cd0195fb59dbeeefd",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeefd"
+  },
+  "Gate Valve": {
+    "id": "6975126cd0195fb59dbeeeff",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeeeff"
+  },
+  "Gauge Accessories": {
+    "id": "6975126cd0195fb59dbeef01",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeef01"
+  },
+  "Gauge Adapter": {
+    "id": "6975126cd0195fb59dbeef03",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeef03"
+  },
+  "Gauge Clock": {
+    "id": "6975126cd0195fb59dbeef05",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeef05"
+  },
+  "Globe Valve": {
+    "id": "6975126cd0195fb59dbeef07",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeef07"
+  },
+  "High Pressure Needle Valve": {
+    "id": "6975126cd0195fb59dbeef09",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeef09"
+  },
+  "Inline Spring Check Valve": {
+    "id": "6975126cd0195fb59dbeef0b",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeef0b"
+  },
+  "Integral Bonnet Needle Valve": {
+    "id": "6975126cd0195fb59dbeef0d",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeef0d"
+  },
+  "Knife Gate Valve": {
+    "id": "6975126cd0195fb59dbeef0f",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeef0f"
+  },
+  "Lift Check Valve": {
+    "id": "6975126cd0195fb59dbeef11",
+    "url": "http://localhost:5000/api/products/image/6975126cd0195fb59dbeef11"
+  },
+  "Monoflange Manifold": {
+    "id": "6975126dd0195fb59dbeef13",
+    "url": "http://localhost:5000/api/products/image/6975126dd0195fb59dbeef13"
+  },
+  "Needle Valve": {
+    "id": "6975126dd0195fb59dbeef15",
+    "url": "http://localhost:5000/api/products/image/6975126dd0195fb59dbeef15"
+  },
+  "Panel Mount Needle Valve": {
+    "id": "6975126dd0195fb59dbeef17",
+    "url": "http://localhost:5000/api/products/image/6975126dd0195fb59dbeef17"
+  },
+  "Pigtail": {
+    "id": "6975126dd0195fb59dbeef19",
+    "url": "http://localhost:5000/api/products/image/6975126dd0195fb59dbeef19"
+  },
+  "Pipe Fitting": {
+    "id": "6975126dd0195fb59dbeef1b",
+    "url": "http://localhost:5000/api/products/image/6975126dd0195fb59dbeef1b"
+  },
+  "Press Fit 90": {
+    "id": "6975126dd0195fb59dbeef1d",
+    "url": "http://localhost:5000/api/products/image/6975126dd0195fb59dbeef1d"
+  },
+  "Pressuregauge": {
+    "id": "6975126dd0195fb59dbeef1f",
+    "url": "http://localhost:5000/api/products/image/6975126dd0195fb59dbeef1f"
+  },
+  "Snubber": {
+    "id": "6975126dd0195fb59dbeef21",
+    "url": "http://localhost:5000/api/products/image/6975126dd0195fb59dbeef21"
+  }
+}

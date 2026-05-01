@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Satyam Controls - Product Catalog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <style>
+        :root {
+            --jet-stream: #C1D1CF; --light-slate: #748B91; --granite-gray: #636467; 
+            --dark-jungle: #171F22; --color-bg: #E4EBF1; 
+            --shadow-light: rgba(255, 255, 255, 0.9); --shadow-dark: rgba(22, 27, 29, 0.2);
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: var(--color-bg); font-family: 'Montserrat', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+        nav { display: flex; justify-content: flex-end; padding: 15px 5%; position: fixed; width: 100%; top: 0; left: 0; z-index: 1000; background: rgba(193, 209, 207, 0.95); backdrop-filter: blur(10px); }
+        .nav-links { display: flex; list-style: none; gap: 40px; align-items: center; margin: 0; }
+        .nav-links a { text-decoration: none; color: var(--dark-jungle); font-size: 16px; font-weight: 600; }
+        .admin-btn { background: var(--dark-jungle); color: white !important; padding: 10px 25px; border-radius: 30px; font-size: 14px; }
+        main { flex: 1; padding: 120px 5% 60px; width: 100%; }
+        #display-title { font-family:'Exo 2'; font-size: 3.5rem; text-align: center; margin-bottom: 60px; text-transform: uppercase; }
+        #products-grid-view { display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px; max-width: 1600px; margin: 0 auto; }
+        .product-card { 
+            background: var(--color-bg); padding: 60px 40px; border-radius: 50px; text-align: center; cursor: pointer; 
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: -15px -15px 30px var(--shadow-light), 15px 15px 30px var(--shadow-dark);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .product-card:hover { transform: translateY(-20px); box-shadow: -25px -25px 50px var(--shadow-light), 25px 25px 50px var(--shadow-dark); }
+        .image-container { width: 100%; height: 300px; display: flex; align-items: center; justify-content: center; margin-bottom: 30px; }
+        .product-card img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1)); }
+        .product-info h3 { font-size: 1.6rem; font-family: 'Exo 2', sans-serif; color: var(--dark-jungle); margin: 0; }
+        footer { background: var(--dark-jungle); color: var(--jet-stream); padding: 30px 0; text-align: center; margin-top: auto; }
+        @media (max-width: 1100px) { #products-grid-view { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) { #products-grid-view { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="nav-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="product.html">Products</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="admin-login.html" class="admin-btn">ADMIN ⚙️</a></li>
+        </ul>
+    </nav>
+    <main>
+        <h1 id="display-title">PRODUCTS</h1>
+        <div id="products-grid-view"></div>
+    </main>
+    <footer><p>&copy; 2026 Satyam Controls. All Rights Reserved.</p></footer>
+    <script type="module" src="dist/catalog.js"></script>
+</body>
+</html>

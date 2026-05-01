@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satyam Controls | Industrial Products</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --jet-stream: #C1D1CF;
+            --light-slate: #748B91;
+            --granite-gray: #636467;
+            --dark-jungle: #171F22;
+            --ease: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        nav { 
+            display: flex; 
+            justify-content: flex-end; 
+            padding: 15px 5%; 
+            position: fixed; 
+            width: 100%; 
+            top: 0; 
+            left: 0;
+            z-index: 1000; 
+            background: rgba(193, 209, 207, 0.95); 
+            backdrop-filter: blur(10px);
+            box-sizing: border-box;
+        }
+        .nav-links { display: flex; list-style: none; gap: 40px; align-items: center; margin: 0; }
+        .nav-links a { 
+            text-decoration: none; 
+            color: var(--dark-jungle); 
+            font-size: 16px; 
+            font-weight: 600; 
+        }
+        .admin-btn { 
+            background: var(--dark-jungle); 
+            color: white !important; 
+            padding: 10px 25px; 
+            border-radius: 30px; 
+            text-decoration: none; 
+            font-size: 14px; 
+        }
+        
+        body {
+            margin: 0; 
+            background-color: var(--jet-stream); 
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            transition: background 0.5s var(--ease);
+            padding-top: 80px; 
+        }
+        
+        .hero { 
+            display: flex; 
+            align-items: center; 
+            width: 90vw; 
+            max-width: 1400px; 
+            margin: 0 auto 40px auto; 
+            height: 500px; 
+        }
+        
+        .image-stage { flex: 1.2; display: flex; justify-content: center; }
+        
+        #activeProductImg { 
+            height: 500px; 
+            max-width: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 30px 60px rgba(0,0,0,0.2)); 
+            transition: opacity 0.2s var(--ease), transform 0.2s var(--ease); 
+        }
+        
+        .content-stage { 
+            flex: 1; 
+            padding-left: 40px; 
+            transition: opacity 0.5s var(--ease), transform 0.5s var(--ease); 
+        }
+
+        .hero-hidden {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        
+        .content-stage h1 { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 5rem; 
+            margin: 10px 0; 
+            color: var(--dark-jungle); 
+        }
+        
+        .carousel-outer { 
+            width: 100%; 
+            padding-left: 5vw; 
+            overflow: hidden; 
+            margin-bottom: 50px; 
+        }
+        
+        .carousel-track { 
+            display: flex; 
+            gap: 30px; 
+            transition: transform 0.4s var(--ease);
+        }
+        
+        .category-card {
+            min-width: 300px; 
+            height: 220px; 
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px); 
+            border-radius: 35px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            justify-content: center; 
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .category-card img { 
+            height: 120px; 
+            max-width: 90%;
+            object-fit: contain;
+        }
+        
+        footer {
+            background-color: var(--dark-jungle);
+            color: var(--jet-stream);
+            padding: 20px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="nav-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="product.html">Products</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="admin-login.html" class="admin-btn">ADMIN ⚙️</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="image-stage">
+            <img src="" 
+                 id="activeProductImg" 
+                 alt="Loading..."
+                 onerror="this.onerror=null; this.src='https://via.placeholder.com/800x600/292C36/FFFFFF?text=Loading...';">
+        </div>
+        <div class="content-stage" id="textContent">
+            <h4>Featured Series</h4>
+            <h1 id="prodTitle">Loading...</h1>
+            <p id="prodDesc">Loading description...</p>
+            <button id="viewBtn" style="background: var(--dark-jungle); color: white; border: none; padding: 15px 35px; border-radius: 50px; cursor: pointer;">VIEW PRODUCTS</button>
+        </div>
+    </section>
+
+    <div class="carousel-outer">
+        <div class="carousel-track" id="track"></div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Satyam Controls. Industrial Excellence.</p>
+    </footer>
+
+    <script>
+        (function() {
+            // Unique Fingerprint Tracking
+            if (!localStorage.getItem('satyam_device_id')) {
+                localStorage.setItem('satyam_device_id', 'DEV-' + Math.random().toString(36).substr(2, 9).toUpperCase());
+            }
+
+            const startTime = Date.now();
+            const pageName = window.location.pathname.split("/").pop() || "index.html";
+
+            window.addEventListener('beforeunload', () => {
+                const timeSpent = Math.round((Date.now() - startTime) / 1000);
+                if (timeSpent > 0) {
+                    const logs = JSON.parse(localStorage.getItem('pageLogs') || "[]");
+                    logs.push({
+                        fingerprint: localStorage.getItem('satyam_device_id'),
+                        page: pageName,
+                        duration: timeSpent,
+                        timestamp: new Date().toISOString()
+                    });
+                    if (logs.length > 500) logs.shift();
+                    localStorage.setItem('pageLogs', JSON.stringify(logs));
+                }
+            });
+        })();
+    </script>
+    <script type="module" src="dist/script.js"></script>
+    <script src="chatbot.js"></script>
+</body>
+</html>

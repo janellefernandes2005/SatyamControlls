@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satyam Controls - Contact</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --jet-stream: #C1D1CF;
+            --dark-jungle: #171F22;
+            --granite-gray: #4A4E49;
+            --bg-page: #fdfdfd; 
+            --text-color: #333333;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        /* --- ORIGINAL SLIM NAVBAR --- */
+        nav { 
+            display: flex; 
+            justify-content: flex-end; 
+            padding: 20px 5%; 
+            position: fixed; 
+            top: 0; 
+            left: 0;
+            right: 0;
+            background-color: rgba(253, 253, 253, 0.98); 
+            z-index: 1000; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .nav-links { 
+            display: flex; 
+            list-style: none; 
+            gap: 30px; 
+            align-items: center; 
+            margin: 0; 
+            padding: 0; 
+        }
+
+        .nav-links a { 
+            text-decoration: none; 
+            color: var(--dark-jungle); 
+            font-size: 15px; 
+            font-weight: 600; 
+            transition: color 0.3s ease;
+        }
+
+        .admin-btn { 
+            background: var(--dark-jungle); 
+            color: white !important; 
+            padding: 10px 22px; 
+            border-radius: 30px; 
+            text-decoration: none; 
+            font-size: 14px; 
+            font-weight: 600; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- CONTAINER --- */
+        #contact-container {
+            padding: 120px 20px 80px; 
+            max-width: 1200px; 
+            margin: 0 auto;
+        }
+
+        .header-title {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 2.8rem; 
+            color: var(--granite-gray);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 50px;
+        }
+
+        /* --- ORIGINAL INFO BOXES (MADE BIG) --- */
+        .cards-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .info-box {
+            background-color: var(--jet-stream);
+            border: 2px solid var(--granite-gray);
+            border-radius: 12px;
+            padding: 40px;
+            min-height: 400px; /* Big size */
+            transition: transform 0.3s ease;
+        }
+
+        .info-box h3 {
+            color: var(--granite-gray);
+            margin-top: 0;
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--granite-gray);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        .detail-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+
+        .detail-row i {
+            color: var(--granite-gray);
+            font-size: 1.2rem;
+            width: 25px;
+            text-align: center;
+        }
+
+        .content h4 {
+            margin: 0;
+            font-size: 0.95rem;
+            color: var(--granite-gray);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .content p, .content a {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            line-height: 1.5;
+        }
+
+        /* --- ORIGINAL FORM BOX (BIG SIZE) --- */
+        .form-box {
+            background-color: var(--jet-stream);
+            border: 2px solid var(--granite-gray);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 50px;
+        }
+
+        .form-box h3 {
+            color: var(--granite-gray);
+            text-align: center;
+            font-family: 'Exo 2', sans-serif;
+            margin-top: 0;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            font-size: 1.8rem;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.95rem; }
+
+        .input-group input, .input-group textarea, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--granite-gray);
+            border-radius: 6px;
+            background: white;
+            font-family: inherit;
+        }
+
+        .btn-submit {
+            background-color: var(--granite-gray);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto 0;
+            text-transform: uppercase;
+        }
+
+        .map-frame-wrapper {
+            border: 2px solid var(--granite-gray);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        footer {
+            background-color: var(--dark-jungle);
+            color: var(--jet-stream);
+            padding: 25px 0;
+            text-align: center;
+            font-size: 13px;
+        }
+        
+        /* Validation styles */
+        .input-group input:invalid,
+        .input-group textarea:invalid,
+        .input-group select:invalid {
+            border-color: #ff6b6b;
+        }
+        
+        .input-group input:valid,
+        .input-group textarea:valid,
+        .input-group select:valid {
+            border-color: #51cf66;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="nav-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="product.html">Products</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="admin-login.html" class="admin-btn">ADMIN <i class="fas fa-cog"></i></a></li>
+        </ul>
+    </nav>
+
+    <div id="contact-container">
+        <h1 class="header-title">Contact Us</h1>
+
+        <div class="cards-layout">
+            <div class="info-box">
+                <h3>Get In Touch</h3>
+                <div class="detail-row">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="content">
+                        <h4>Address</h4>
+                        <p>Unit No 20, Ground Floor, Vasundhra Industrial Estate, KT Park, Goral pada, Vasai (E), Maharashtra 401208</p>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <i class="fas fa-phone"></i>
+                    <div class="content">
+                        <h4>Phone</h4>
+                        <p>+91 86000 85244</p>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <i class="fas fa-envelope"></i>
+                    <div class="content">
+                        <h4>Email</h4>
+                        <p>satyamcontrols10@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>Business Hours</h3>
+                <div class="detail-row">
+                    <i class="fas fa-clock"></i>
+                    <div class="content">
+                        <h4>Monday - Friday</h4>
+                        <p>9:00 AM - 6:00 PM</p>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <i class="fas fa-clock"></i>
+                    <div class="content">
+                        <h4>Saturday</h4>
+                        <p>9:00 AM - 2:00 PM</p>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <i class="fas fa-ban"></i>
+                    <div class="content">
+                        <h4>Sunday</h4>
+                        <p>Closed</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>Support Details</h3>
+                <div class="detail-row">
+                    <i class="fas fa-cog"></i>
+                    <div class="content">
+                        <h4>Technical Support</h4>
+                        <p>satyamcontrols10@gmail.com</p>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <i class="fas fa-user-shield"></i>
+                    <div class="content">
+                        <h4>Customer Service</h4>
+                        <p>+91 86000 85244</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-box">
+            <h3>Send us a Message</h3>
+            <form id="inquiry-form">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Your Name *</label>
+                        <input type="text" name="fullName" placeholder="Your Name" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Email Address *</label>
+                        <input type="email" name="email" placeholder="Email Address" required>
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Phone Number</label>
+                        <input type="tel" name="phone" placeholder="Phone Number">
+                    </div>
+                    <div class="input-group">
+                        <label>Subject</label>
+                        <select name="subject">
+                            <option value="">Select a subject</option>
+                            <option value="inquiry">Inquiry</option>
+                            <option value="technical">Technical Support</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Your Message *</label>
+                    <textarea name="message" rows="5" placeholder="How can we help?" required></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Send Message</button>
+            </form>
+        </div>
+
+        <div class="map-frame-wrapper">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6516.436590089905!2d72.83685967770997!3d19.417820700000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7a9267995a217%3A0xf377925cab04459b!2sSATYAM%20CONTROLS!5e1!3m2!1sen!2sin!4v1768894163113!5m2!1sen!2sin" width="100%" height="500" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Satyam Controls. All Rights Reserved.</p>
+    </footer>
+    
+    <script>
+    (function() {
+        // Unique Fingerprint Tracking
+        if (!localStorage.getItem('satyam_device_id')) {
+            localStorage.setItem('satyam_device_id', 'DEV-' + Math.random().toString(36).substr(2, 9).toUpperCase());
+        }
+
+        const startTime = Date.now();
+        const pageName = window.location.pathname.split("/").pop() || "index.html";
+
+        window.addEventListener('beforeunload', () => {
+            const timeSpent = Math.round((Date.now() - startTime) / 1000);
+            if (timeSpent > 0) {
+                const logs = JSON.parse(localStorage.getItem('pageLogs') || "[]");
+                logs.push({
+                    fingerprint: localStorage.getItem('satyam_device_id'),
+                    page: pageName,
+                    duration: timeSpent,
+                    timestamp: new Date().toISOString()
+                });
+                if (logs.length > 500) logs.shift(); // Prevent storage bloat
+                localStorage.setItem('pageLogs', JSON.stringify(logs));
+            }
+        });
+    })();
+    </script>
+    
+    <!-- Keep the external script reference -->
+    <script type="module" src="dist/contact.js"></script>
+    <script src="chatbot.js"></script>
+</body>
+</html>

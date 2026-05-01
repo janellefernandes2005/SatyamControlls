@@ -1,0 +1,40 @@
+{
+  "name": "satyam-controls",
+  "version": "1.0.0",
+  "description": "Satyam Controls Industrial Products Catalog",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "live-server .",
+    "dev": "tsc --watch & live-server ."
+  },
+  "dependencies": {
+    "@types/three": "^0.182.0",
+    "axios": "^1.13.2",
+    "bcryptjs": "^3.0.3",
+    "chart.js": "^3.9.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "form-data": "^4.0.5",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.1.5",
+    "resend": "^6.8.0",
+    "three": "^0.182.0"
+  },
+  "devDependencies": {
+    "@types/chart.js": "^2.9.41",
+    "live-server": "^1.2.2",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "industrial",
+    "valves",
+    "fittings",
+    "controls",
+    "3d"
+  ],
+  "author": "Satyam Controls",
+  "license": "MIT"
+}

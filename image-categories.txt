@@ -1,0 +1,42 @@
+1-piece ball valve.png → ball-valves
+2-piece ball valve.png → ball-valves
+2-valve manifold.png → manifold-valves
+3-piece ball valve.png → ball-valves
+3-piece flanged ball valve.png → ball-valves
+3-valve manifold.png → manifold-valves
+3-way ball valve.png → ball-valves
+5-valve manifold.png → manifold-valves
+angle needle valve.png → needle-valves
+ball check valve.png → ball-valves
+ball valve.png → ball-valves
+brass needle valve.png → needle-valves
+butterfly valves.png → ball-valves
+check valve.png → check-valves
+compression horse barb.png → tube-fittings
+compression male connector.png → tube-fittings
+compression needle valve.png → needle-valves
+compression reducing union.png → tube-fittings
+compression union.png → tube-fittings
+coplanar manifold.png → manifold-valves
+diaphragm seal.png → gauge-accessories
+double block.png → manifold-valves
+dual plate check valve.png → check-valves
+eccentric plug valve.png → ball-valves
+gate valve.png → ball-valves
+gauge accessories.png → gauge-accessories
+gauge adapter.png → gauge-accessories
+gauge clock.png → gauge-accessories
+globe valve.png → ball-valves
+high-pressure needle valve.png → needle-valves
+inline spring check valve.png → check-valves
+integral bonnet needle valve.png → needle-valves
+knife gate valve.png → ball-valves
+lift check valve.png → check-valves
+monoflange manifold.png → manifold-valves
+needle valve.png → needle-valves
+panel mount needle valve.png → needle-valves
+pigtail.png → gauge-accessories
+pipe fitting.png → tube-fittings
+press fit 90.png → tube-fittings
+pressuregauge.png → gauge-accessories
+snubber.png → gauge-accessories
