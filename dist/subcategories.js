@@ -1,4 +1,4 @@
-// subcategories.ts - FULL ORIGINAL WITH BIG CARDS (3x2 GRID)
+// subcategories.ts - BIGGER CARDS (400px height)
 // Full subcategories data
 const getSubcategoriesForCategory = (categoryId) => {
     const allSubcategories = {
@@ -71,7 +71,7 @@ const getSubcategoriesForCategory = (categoryId) => {
     };
     return allSubcategories[categoryId] || allSubcategories["tube-fittings"];
 };
-// Load and display subcategories with ORIGINAL BIG CARD LAYOUT
+// Load and display subcategories with BIGGER CARDS
 function loadSubcategoriesGrid() {
     const urlParams = new URLSearchParams(window.location.search);
     let categoryId = urlParams.get('cat') || 'tube-fittings';
@@ -89,30 +89,28 @@ function loadSubcategoriesGrid() {
         return;
     // Clear grid
     grid.innerHTML = '';
-    // Add subcategory cards - ORIGINAL BIG SIZE (3 per row, big cards)
+    // Add subcategory cards - BIGGER SIZE (280px height, larger fonts)
     category.subcategories.forEach((sub) => {
         const card = document.createElement('div');
         card.className = 'product-card';
-        card.style.cssText = 'background: white; border-radius: 16px; overflow: hidden; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.1);';
+        card.style.cssText = 'background: white; border-radius: 20px; overflow: hidden; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(0,0,0,0.1);';
         card.innerHTML = `
-            <div class="image-container" style="height: 220px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; padding: 20px;">
+            <div class="image-container" style="height: 280px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 25px;">
                 <img src="/api/products/image/${sub.id}" 
                      alt="${sub.name}"
-                     style="max-width: 100%; max-height: 180px; object-fit: contain;"
-                     onerror="this.src='https://placehold.co/400x300/292C36/FFFFFF?text=${sub.name}'">
+                     style="max-width: 100%; max-height: 220px; object-fit: contain; transition: transform 0.3s ease;"
+                     onerror="this.src='https://placehold.co/500x400/292C36/FFFFFF?text=${sub.name}'">
             </div>
-            <div class="product-info" style="padding: 20px; text-align: center;">
-                <h3 style="font-size: 18px; margin-bottom: 8px; color: #171F22;">${sub.name}</h3>
-                <p style="font-size: 13px; color: #666; margin-bottom: 10px;">${sub.material} | ${sub.pressure}</p>
-                <button style="background: #2d7a9b; color: white; border: none; padding: 8px 20px; border-radius: 25px; cursor: pointer; font-size: 13px;">View Details →</button>
+            <div class="product-info" style="padding: 25px; text-align: center;">
+                <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 12px; color: #171F22;">${sub.name}</h3>
+                <p style="font-size: 14px; color: #666; margin-bottom: 15px; line-height: 1.5;">${sub.material} | ${sub.pressure}</p>
+                <button style="background: #2d7a9b; color: white; border: none; padding: 10px 28px; border-radius: 30px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.3s ease;">View Details →</button>
             </div>
         `;
         card.addEventListener('click', (e) => {
-            // Don't trigger if clicking the button (to avoid double)
             if (e.target.tagName === 'BUTTON') {
                 e.stopPropagation();
             }
-            // Save current category before leaving
             sessionStorage.setItem('currentSubcategory', categoryId);
             sessionStorage.setItem('needsGridReload', 'true');
             const productData = {

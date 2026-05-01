@@ -62,7 +62,7 @@ class PredictiveAdminDashboard {
             }
             catch (e) { }
             // ✅ ONLY CHANGE - Point to Render ML service
-            const response = await fetch('https://satyam-ml.onrender.com/api/admin/analyze', {
+            const response = await fetch('/api/admin/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ visitors, inquiries, clickstream, products })
