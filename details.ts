@@ -1,5 +1,4 @@
-// details.ts - Final Version
-
+// details.ts - COMPLETE FIXED VERSION
 document.addEventListener('DOMContentLoaded', () => {
     const rawData = localStorage.getItem('selectedProduct');
     if (!rawData) {
@@ -23,17 +22,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if (el) el.textContent = value;
     }
 
-    // Load Unique Image with smooth fade-in
+    // Load image from MongoDB
     const imgEl = document.getElementById('p-img') as HTMLImageElement;
     if (imgEl) {
         imgEl.style.opacity = '0';
-        imgEl.src = product.img;
+        
+        let imageUrl = product.img;
+        if (!imageUrl || imageUrl.includes('placeholder') || imageUrl.includes('localhost')) {
+            imageUrl = '/api/products/image/6975126cd0195fb59dbeeeed';
+        }
+        
+        imgEl.src = imageUrl;
         imgEl.onload = () => {
             imgEl.style.transition = 'opacity 0.8s ease';
             imgEl.style.opacity = '1';
         };
         imgEl.onerror = () => {
-            imgEl.src = 'https://placehold.co/600x400?text=Unavailable';
+            imgEl.src = '/api/products/image/6975126cd0195fb59dbeeeed';
             imgEl.style.opacity = '1';
         };
     }

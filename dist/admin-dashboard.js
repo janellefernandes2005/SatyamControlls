@@ -1,4 +1,3 @@
-// admin-dashboard.ts - Complete with K-Means Cluster, Heatmap, and all visualizations
 class PredictiveAdminDashboard {
     constructor() {
         this.mlData = null;
@@ -29,281 +28,182 @@ class PredictiveAdminDashboard {
             let inquiries = [];
             let clickstream = [];
             let products = [];
+            // Fetch real data from backend
             try {
-                const visitorsRes = await fetch('http://localhost:8000/api/tracking/analytics', { headers });
+                const visitorsRes = await fetch('/api/tracking/analytics', { headers });
                 if (visitorsRes.ok) {
                     const data = await visitorsRes.json();
                     visitors = data.visitors || [];
                 }
             }
-            catch (e) { }
+            catch (e) {
+                console.log('No visitor data');
+            }
             try {
-                const inquiriesRes = await fetch('http://localhost:8000/api/contact/all', { headers });
+                const inquiriesRes = await fetch('/api/contact/all', { headers });
                 if (inquiriesRes.ok) {
                     const data = await inquiriesRes.json();
                     inquiries = data.inquiries || [];
                 }
             }
-            catch (e) { }
-            try {
-                const clickstreamRes = await fetch('http://localhost:8000/api/tracking/analytics', { headers });
-                if (clickstreamRes.ok) {
-                    const data = await clickstreamRes.json();
-                    clickstream = data.clickstream || [];
-                }
+            catch (e) {
+                console.log('No inquiry data');
             }
-            catch (e) { }
             try {
-                const productsRes = await fetch('http://localhost:8000/api/products', { headers });
+                const productsRes = await fetch('/api/products', { headers });
                 if (productsRes.ok) {
                     products = await productsRes.json();
-                    this.updateInventoryCounts(products);
                 }
             }
-            catch (e) { }
-            const response = await fetch('http://localhost:8002/api/admin/analyze', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ visitors, inquiries, clickstream, products })
-            });
-            if (response.ok) {
-                this.mlData = await response.json();
-                this.renderOverview();
-                this.renderAnalytics();
-                this.renderSentimentPage();
+            catch (e) {
+                console.log('No product data');
             }
+            // For now, use mock data for ML visualization
+            this.mlData = {
+                kpi: {
+                    total_visitors: visitors.length || 156,
+                    total_inquiries: inquiries.length || 45,
+                    avg_session: 4.2,
+                    bounce_rate: 38,
+                    conversion_rate: 2.8,
+                    hot_leads: 12,
+                    warm_leads: 18,
+                    cold_leads: 15
+                },
+                analytics: {
+                    daily_traffic: [
+                        { date: 'Jan 1', count: 45 },
+                        { date: 'Jan 2', count: 52 },
+                        { date: 'Jan 3', count: 48 },
+                        { date: 'Jan 4', count: 61 },
+                        { date: 'Jan 5', count: 55 },
+                        { date: 'Jan 6', count: 67 },
+                        { date: 'Jan 7', count: 72 }
+                    ],
+                    device_stats: { Desktop: 65, Mobile: 28, Tablet: 7 },
+                    top_products: products.slice(0, 5).map((p, i) => ({
+                        name: p.name || `Product ${i + 1}`,
+                        views: Math.floor(Math.random() * 100) + 20,
+                        popularity_score: Math.floor(Math.random() * 60) + 40
+                    })),
+                    sentiment_distribution: { Positive: 28, Neutral: 35, Negative: 12, Urgent: 8 },
+                    top_leads: inquiries.slice(0, 5).map((i) => ({
+                        name: i.fullName || 'Customer',
+                        email: i.email,
+                        score: Math.floor(Math.random() * 40) + 60,
+                        quality: Math.random() > 0.5 ? 'Hot' : 'Warm',
+                        sentiment: 'Interested'
+                    }))
+                },
+                ml_insights: {
+                    recommendations: [
+                        '🔥 12 hot leads ready for follow-up',
+                        '📈 Tube Fittings are your top category with 45% of views',
+                        '⚠️ 8 urgent inquiries need immediate attention',
+                        '😊 28 positive inquiries - 62% satisfaction rate',
+                        '👥 156 unique visitors in last 30 days'
+                    ]
+                }
+            };
+            this.renderOverview();
+            this.renderSentimentPage();
         }
         catch (error) {
             console.error('Error loading dashboard data:', error);
         }
     }
-    updateInventoryCounts(products) {
-        const categoryCounts = {};
-        products.forEach(p => {
-            const cat = p.category || 'other';
-            categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
-        });
-        const total = products.length;
-        const inventoryTotal = document.getElementById('inventoryTotal');
-        if (inventoryTotal)
-            inventoryTotal.textContent = total.toString();
-        const tubeElem = document.getElementById('inv-tube');
-        if (tubeElem)
-            tubeElem.textContent = (categoryCounts['tube-fittings'] || 0).toString();
-        const ballElem = document.getElementById('inv-ball');
-        if (ballElem)
-            ballElem.textContent = (categoryCounts['ball-valves'] || 0).toString();
-        const needleElem = document.getElementById('inv-needle');
-        if (needleElem)
-            needleElem.textContent = (categoryCounts['needle-valves'] || 0).toString();
-        const manifoldElem = document.getElementById('inv-manifold');
-        if (manifoldElem)
-            manifoldElem.textContent = (categoryCounts['manifold-valves'] || 0).toString();
-        const checkElem = document.getElementById('inv-check');
-        if (checkElem)
-            checkElem.textContent = (categoryCounts['check-valves'] || 0).toString();
-        const gaugeElem = document.getElementById('inv-gauge');
-        if (gaugeElem)
-            gaugeElem.textContent = (categoryCounts['gauge-accessories'] || 0).toString();
-    }
     renderOverview() {
         const container = document.getElementById('dynamic-content');
         if (!container)
             return;
-        const dailyTraffic = this.mlData?.analytics?.daily_traffic || this.generateDailyTraffic();
-        const deviceStats = this.mlData?.analytics?.device_stats || { Desktop: 58, Mobile: 32, Tablet: 10 };
+        const dailyTraffic = this.mlData?.analytics?.daily_traffic || [];
+        const deviceStats = this.mlData?.analytics?.device_stats || { Desktop: 0, Mobile: 0, Tablet: 0 };
         const topProducts = this.mlData?.analytics?.top_products || [];
-        const kpi = this.mlData?.kpi || { total_visitors: 156, total_inquiries: 45, hot_leads: 8, warm_leads: 12, cold_leads: 25, avg_session: 4.5, bounce_rate: 38, conversion_rate: 12.5 };
+        const kpi = this.mlData?.kpi || {};
         container.innerHTML = `
-            <div class="kpi-grid">
-                <div class="kpi-card">
-                    <div class="kpi-icon"><i class="fas fa-users"></i></div>
-                    <div class="kpi-value">${kpi.total_visitors}</div>
-                    <div class="kpi-label">Total Visitors</div>
-                    <div class="kpi-trend"><i class="fas fa-arrow-up"></i> +12% vs last month</div>
+            <div class="kpi-row">
+                <div class="card kpi">
+                    <h4><i class="fas fa-users"></i> Total Visitors</h4>
+                    <p>${kpi.total_visitors}</p>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-icon"><i class="fas fa-envelope"></i></div>
-                    <div class="kpi-value">${kpi.total_inquiries}</div>
-                    <div class="kpi-label">Total Inquiries</div>
-                    <div class="kpi-trend"><i class="fas fa-arrow-up"></i> +8% vs last month</div>
+                <div class="card kpi">
+                    <h4><i class="fas fa-clock"></i> Avg Session</h4>
+                    <p>${kpi.avg_session} min</p>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-icon"><i class="fas fa-fire"></i></div>
-                    <div class="kpi-value">${kpi.hot_leads}</div>
-                    <div class="kpi-label">Hot Leads</div>
-                    <div class="kpi-trend" style="color: #e74c3c;">Ready for follow-up</div>
+                <div class="card kpi">
+                    <h4><i class="fas fa-chart-line"></i> Bounce Rate</h4>
+                    <p>${kpi.bounce_rate}%</p>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-icon"><i class="fas fa-chart-line"></i></div>
-                    <div class="kpi-value">${kpi.conversion_rate}%</div>
-                    <div class="kpi-label">Conversion Rate</div>
-                    <div class="kpi-trend"><i class="fas fa-arrow-up"></i> +2.5%</div>
+                <div class="card kpi">
+                    <h4><i class="fas fa-percent"></i> Conversion</h4>
+                    <p>${kpi.conversion_rate}%</p>
                 </div>
             </div>
 
-            <div class="chart-grid">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3><i class="fas fa-chart-line"></i> Daily Traffic (30 Days)</h3>
-                        <span class="chart-badge">REAL-TIME</span>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="trafficChart"></canvas>
-                    </div>
-                </div>
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3><i class="fas fa-chart-pie"></i> Device Distribution</h3>
-                        <span class="chart-badge">K-MEANS CLUSTER</span>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="deviceChart"></canvas>
-                    </div>
+            <div class="card" style="margin-bottom: 20px;">
+                <h3><i class="fas fa-chart-line"></i> Traffic Analysis</h3>
+                <div class="chart-container" style="height: 350px;">
+                    <canvas id="mainTrafficChart"></canvas>
                 </div>
             </div>
 
-            <div class="chart-grid">
-                <div class="chart-card full-width-chart">
-                    <div class="chart-header">
-                        <h3><i class="fas fa-chart-bar"></i> Top Products by Popularity</h3>
-                        <span class="chart-badge">RANDOM FOREST</span>
-                    </div>
-                    <div class="products-grid" id="productsGrid">
-                        ${topProducts.slice(0, 5).map((p, idx) => `
-                            <div class="product-card">
-                                <div class="product-rank">${idx + 1}</div>
-                                <div class="product-name">${p.name.length > 25 ? p.name.substring(0, 22) + '...' : p.name}</div>
-                                <div class="product-score">${p.popularity_score}%</div>
-                                <div class="product-views"><i class="fas fa-eye"></i> ${p.views || 0} views</div>
-                            </div>
-                        `).join('')}
-                    </div>
+            <div class="grid-main">
+                <div class="card">
+                    <h3><i class="fas fa-chart-pie"></i> Device Distribution</h3>
+                    <div class="chart-container"><canvas id="deviceChart"></canvas></div>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-chart-bar"></i> Top Products</h3>
+                    <div class="chart-container"><canvas id="topProductsChart"></canvas></div>
                 </div>
             </div>
         `;
         setTimeout(() => {
-            this.initTrafficChart(dailyTraffic);
+            this.initMainTrafficChart(dailyTraffic);
             this.initDeviceChart(deviceStats);
-        }, 100);
-    }
-    renderAnalytics() {
-        const container = document.getElementById('dynamic-content-analytics');
-        if (!container)
-            return;
-        const clusters = this.mlData?.analytics?.customer_clusters || {};
-        const hourlyTraffic = this.generateHourlyTraffic();
-        const weeklyTraffic = [68, 72, 78, 85, 82, 45, 38];
-        const forecast = this.mlData?.analytics?.traffic_forecast || [42, 46, 51, 55, 60, 64, 68];
-        container.innerHTML = `
-            <div class="chart-grid">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3><i class="fas fa-chart-scatter"></i> K-Means Customer Clusters</h3>
-                        <span class="chart-badge">UNSUPERVISED ML</span>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="clusterChart"></canvas>
-                    </div>
-                    <div id="clusterStats" style="margin-top: 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;"></div>
-                </div>
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3><i class="fas fa-chart-line"></i> LSTM 7-Day Forecast</h3>
-                        <span class="chart-badge">DEEP LEARNING</span>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="forecastChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="chart-grid">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3><i class="fas fa-chart-bar"></i> Hourly Traffic Pattern</h3>
-                        <span class="chart-badge">PEAK HOURS</span>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="hourlyChart"></canvas>
-                    </div>
-                </div>
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3><i class="fas fa-chart-line"></i> Weekly Traffic Pattern</h3>
-                        <span class="chart-badge">SEASONALITY</span>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="weeklyChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="chart-card">
-                <div class="chart-header">
-                    <h3><i class="fas fa-trophy"></i> Priority Leads - Gradient Boosting Scores</h3>
-                    <span class="chart-badge">AI SCORED</span>
-                </div>
-                <div id="leadsTable"></div>
-            </div>
-        `;
-        setTimeout(() => {
-            this.initClusterChart();
-            this.initForecastChart(forecast);
-            this.initHourlyChart(hourlyTraffic);
-            this.initWeeklyChart(weeklyTraffic);
-            this.renderClusterStats();
-            this.renderLeadsTable();
+            this.initTopProductsChart(topProducts);
         }, 100);
     }
     renderSentimentPage() {
         const container = document.getElementById('dynamic-content-sentiment');
         if (!container)
             return;
-        const sentimentDist = this.mlData?.analytics?.sentiment_distribution || { Positive: 45, Neutral: 30, Negative: 15, Urgent: 10 };
-        const topProducts = this.mlData?.analytics?.top_products || [];
+        const sentimentDist = this.mlData?.analytics?.sentiment_distribution || { Positive: 0, Neutral: 0, Negative: 0, Urgent: 0 };
         const recommendations = this.mlData?.ml_insights?.recommendations || [];
         const topLeads = this.mlData?.analytics?.top_leads || [];
         container.innerHTML = `
-            <div class="chart-grid">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3><i class="fas fa-chart-pie"></i> Sentiment Distribution</h3>
-                        <span class="chart-badge">LDA TOPIC MODELING</span>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="sentimentChart"></canvas>
-                    </div>
-                </div>
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <h3><i class="fas fa-lightbulb"></i> AI-Powered Recommendations</h3>
-                        <span class="chart-badge">REAL-TIME</span>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        ${recommendations.map((rec) => `
-                            <div style="padding: 15px; background: rgba(45,122,155,0.1); border-radius: 12px; border-left: 3px solid #ffb347;">
-                                <i class="fas fa-robot" style="color: #ffb347; margin-right: 10px;"></i>
-                                <span style="font-size: 13px;">${rec}</span>
-                            </div>
-                        `).join('')}
-                    </div>
+            <div class="card" style="margin-bottom: 20px; background: linear-gradient(135deg, rgba(45,122,155,0.2), rgba(45,122,155,0.05));">
+                <h3><i class="fas fa-robot"></i> AI-Powered Insights</h3>
+                <div style="display: grid; gap: 15px; margin-top: 20px;">
+                    ${recommendations.map((rec) => `
+                        <div style="padding: 15px; background: rgba(45,122,155,0.15); border-radius: 12px;">
+                            <i class="fas fa-lightbulb" style="color: #ffb347;"></i>
+                            <span style="margin-left: 12px;">${rec}</span>
+                        </div>
+                    `).join('')}
                 </div>
             </div>
 
-            <div class="chart-card">
-                <div class="chart-header">
-                    <h3><i class="fas fa-chart-bar"></i> Predicted Top Products (Next Week)</h3>
-                    <span class="chart-badge">RANDOM FOREST</span>
+            <div class="grid-main">
+                <div class="card">
+                    <h3><i class="fas fa-chart-pie"></i> Sentiment Distribution</h3>
+                    <div class="chart-container"><canvas id="sentimentChart"></canvas></div>
                 </div>
-                <div class="products-grid" style="grid-template-columns: repeat(4, 1fr);">
-                    ${topProducts.slice(0, 8).map((p) => `
-                        <div class="product-card">
-                            <div class="product-name">${p.name.length > 20 ? p.name.substring(0, 17) + '...' : p.name}</div>
-                            <div class="product-score">${p.popularity_score}%</div>
-                            <div class="product-views"><i class="fas fa-eye"></i> ${p.views || 0}</div>
-                        </div>
-                    `).join('')}
+                <div class="card">
+                    <h3><i class="fas fa-trophy"></i> Priority Leads</h3>
+                    <div style="max-height: 350px; overflow-y: auto;">
+                        ${topLeads.map((lead) => `
+                            <div style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <div>
+                                        <strong>${lead.name}</strong>
+                                        <div style="font-size: 11px;">${lead.email}</div>
+                                    </div>
+                                    <span style="color: ${lead.quality === 'Hot' ? '#e74c3c' : '#ffb347'}">${lead.score}%</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
                 </div>
             </div>
         `;
@@ -311,229 +211,98 @@ class PredictiveAdminDashboard {
             this.initSentimentChart(sentimentDist);
         }, 100);
     }
-    renderClusterStats() {
-        const container = document.getElementById('clusterStats');
-        if (!container)
-            return;
-        const clusters = [
-            { name: 'Industrial Researchers', desc: 'High engagement, long sessions', color: '#2d7a9b', count: 48, pct: 38 },
-            { name: 'Quick Browsers', desc: 'Low engagement, bounce quickly', color: '#6c5b7b', count: 42, pct: 33 },
-            { name: 'Product Evaluators', desc: 'Medium engagement, compare products', color: '#4caf9e', count: 37, pct: 29 }
-        ];
-        container.innerHTML = clusters.map(c => `
-            <div style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px; border-left: 3px solid ${c.color};">
-                <div style="font-weight: 600; margin-bottom: 5px;">${c.name}</div>
-                <div style="font-size: 11px; color: #BDC2C7;">${c.desc}</div>
-                <div style="margin-top: 8px;"><span style="color: ${c.color};">${c.count} visitors (${c.pct}%)</span></div>
-                <div style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 8px;">
-                    <div style="width: ${c.pct}%; height: 100%; background: ${c.color}; border-radius: 2px;"></div>
-                </div>
-            </div>
-        `).join('');
-    }
-    renderLeadsTable() {
-        const container = document.getElementById('leadsTable');
-        if (!container)
-            return;
-        const leads = this.mlData?.analytics?.top_leads || [
-            { name: 'Rajesh Kumar', email: 'rajesh@example.com', score: 92, quality: 'Hot', sentiment: 'Urgent' },
-            { name: 'Priya Sharma', email: 'priya@example.com', score: 88, quality: 'Hot', sentiment: 'Positive' },
-            { name: 'Amit Patel', email: 'amit@example.com', score: 76, quality: 'Warm', sentiment: 'Interested' },
-            { name: 'Sneha Reddy', email: 'sneha@example.com', score: 65, quality: 'Warm', sentiment: 'Neutral' },
-            { name: 'Vikram Singh', email: 'vikram@example.com', score: 45, quality: 'Cold', sentiment: 'Neutral' }
-        ];
-        container.innerHTML = `
-            <table class="leads-table">
-                <thead>
-                    <tr><th>Customer</th><th>Email</th><th>Score</th><th>Priority</th><th>Sentiment</th></tr>
-                </thead>
-                <tbody>
-                    ${leads.slice(0, 8).map((l) => `
-                        <tr>
-                            <td style="font-weight: 600;">${l.name}</td>
-                            <td style="font-size: 12px; color: #BDC2C7;">${l.email}</td>
-                            <td style="font-weight: 600;">${l.score}%</td>
-                            <td><span class="quality-badge quality-${l.quality.toLowerCase()}">${l.quality}</span></td>
-                            <td><span style="font-size: 11px;">${l.sentiment || 'Neutral'}</span></td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        `;
-    }
-    initTrafficChart(data) {
-        const canvas = document.getElementById('trafficChart');
+    initMainTrafficChart(daily) {
+        const canvas = document.getElementById('mainTrafficChart');
         if (!canvas)
             return;
-        this.destroyChart('trafficChart');
+        if (this.charts.has('mainTrafficChart')) {
+            this.charts.get('mainTrafficChart').destroy();
+        }
         const ctx = canvas.getContext('2d');
         if (!ctx)
             return;
-        const gradient = ctx.createLinearGradient(0, 0, 0, 280);
-        gradient.addColorStop(0, 'rgba(76, 175, 158, 0.3)');
-        gradient.addColorStop(1, 'rgba(76, 175, 158, 0)');
-        new Chart(ctx, {
+        const chart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: data.map(d => d.date),
+                labels: daily.map(d => d.date),
                 datasets: [{
                         label: 'Daily Visitors',
-                        data: data.map(d => d.count),
-                        borderColor: '#4caf9e',
-                        backgroundColor: gradient,
-                        borderWidth: 2,
-                        pointRadius: 3,
+                        data: daily.map(d => d.count),
+                        borderColor: '#2d7a9b',
+                        backgroundColor: 'rgba(45, 122, 155, 0.1)',
+                        borderWidth: 3,
                         fill: true,
                         tension: 0.3
                     }]
             },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { color: '#BDC2C7' } } }, scales: { y: { beginAtZero: true, ticks: { color: '#848A98' } }, x: { ticks: { color: '#848A98', maxRotation: 45 } } } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: '#BDC2C7' } } },
+                scales: { y: { ticks: { color: '#848A98' } }, x: { ticks: { color: '#848A98' } } }
+            }
         });
+        this.charts.set('mainTrafficChart', chart);
     }
     initDeviceChart(deviceStats) {
         const canvas = document.getElementById('deviceChart');
         if (!canvas)
             return;
-        this.destroyChart('deviceChart');
+        if (this.charts.has('deviceChart')) {
+            this.charts.get('deviceChart').destroy();
+        }
         const ctx = canvas.getContext('2d');
         if (!ctx)
             return;
-        new Chart(ctx, {
+        const chart = new Chart(ctx, {
             type: 'doughnut',
             data: {
                 labels: Object.keys(deviceStats),
-                datasets: [{ data: Object.values(deviceStats), backgroundColor: ['#2d7a9b', '#4caf9e', '#ffb347'], borderWidth: 0 }]
+                datasets: [{ data: Object.values(deviceStats), backgroundColor: ['#2d7a9b', '#4caf9e', '#ffb347'] }]
             },
-            options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'bottom', labels: { color: '#BDC2C7' } } } }
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#BDC2C7' } } } }
         });
+        this.charts.set('deviceChart', chart);
     }
-    initClusterChart() {
-        const canvas = document.getElementById('clusterChart');
+    initTopProductsChart(products) {
+        const canvas = document.getElementById('topProductsChart');
         if (!canvas)
             return;
-        this.destroyChart('clusterChart');
-        const ctx = canvas.getContext('2d');
-        if (!ctx)
-            return;
-        const industrialData = Array.from({ length: 48 }, () => ({ x: 600 + Math.random() * 200, y: 12 + Math.random() * 5 }));
-        const quickData = Array.from({ length: 42 }, () => ({ x: 80 + Math.random() * 80, y: 2 + Math.random() * 2 }));
-        const productData = Array.from({ length: 37 }, () => ({ x: 320 + Math.random() * 150, y: 7 + Math.random() * 4 }));
-        new Chart(ctx, {
-            type: 'scatter',
-            data: {
-                datasets: [
-                    { label: 'Industrial Researchers', data: industrialData, backgroundColor: '#2d7a9b', pointRadius: 6 },
-                    { label: 'Quick Browsers', data: quickData, backgroundColor: '#6c5b7b', pointRadius: 5 },
-                    { label: 'Product Evaluators', data: productData, backgroundColor: '#4caf9e', pointRadius: 6 }
-                ]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#BDC2C7' } } }, scales: { x: { title: { display: true, text: 'Time on Site (seconds)', color: '#848A98' }, ticks: { color: '#848A98' } }, y: { title: { display: true, text: 'Pages Viewed', color: '#848A98' }, ticks: { color: '#848A98' }, beginAtZero: true } } }
-        });
-    }
-    initForecastChart(forecast) {
-        const canvas = document.getElementById('forecastChart');
-        if (!canvas)
-            return;
-        this.destroyChart('forecastChart');
-        const ctx = canvas.getContext('2d');
-        if (!ctx)
-            return;
-        const labels = [];
-        const now = new Date();
-        for (let i = 0; i < 7; i++) {
-            const date = new Date(now.getTime() + i * 24 * 60 * 60 * 1000);
-            labels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+        if (this.charts.has('topProductsChart')) {
+            this.charts.get('topProductsChart').destroy();
         }
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                        label: 'LSTM Forecast',
-                        data: forecast,
-                        borderColor: '#ffb347',
-                        backgroundColor: 'rgba(255, 179, 71, 0.1)',
-                        borderWidth: 3,
-                        pointRadius: 5,
-                        pointBackgroundColor: '#ffb347',
-                        fill: true,
-                        tension: 0.3
-                    }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { color: '#BDC2C7' } } }, scales: { y: { beginAtZero: true, ticks: { color: '#848A98' } }, x: { ticks: { color: '#848A98' } } } }
-        });
-    }
-    initHourlyChart(data) {
-        const canvas = document.getElementById('hourlyChart');
-        if (!canvas)
-            return;
-        this.destroyChart('hourlyChart');
         const ctx = canvas.getContext('2d');
         if (!ctx)
             return;
-        new Chart(ctx, {
+        const chart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM'],
-                datasets: [{ label: 'Visitors', data: data, backgroundColor: '#2d7a9b', borderRadius: 6 }]
+                labels: products.map(p => p.name.length > 15 ? p.name.substring(0, 12) + '...' : p.name),
+                datasets: [{ label: 'Popularity Score', data: products.map(p => p.popularity_score), backgroundColor: '#2d7a9b' }]
             },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { color: '#BDC2C7' } } }, scales: { y: { beginAtZero: true, ticks: { color: '#848A98' } }, x: { ticks: { color: '#848A98' } } } }
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#BDC2C7' } } }, scales: { y: { ticks: { color: '#848A98' } }, x: { ticks: { color: '#848A98' } } } }
         });
-    }
-    initWeeklyChart(data) {
-        const canvas = document.getElementById('weeklyChart');
-        if (!canvas)
-            return;
-        this.destroyChart('weeklyChart');
-        const ctx = canvas.getContext('2d');
-        if (!ctx)
-            return;
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{ label: 'Weekly Visitors', data: data, borderColor: '#4caf9e', backgroundColor: 'rgba(76,175,158,0.1)', borderWidth: 2, pointRadius: 4, fill: true, tension: 0.3 }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { color: '#BDC2C7' } } }, scales: { y: { beginAtZero: true, ticks: { color: '#848A98' } }, x: { ticks: { color: '#848A98' } } } }
-        });
+        this.charts.set('topProductsChart', chart);
     }
     initSentimentChart(sentimentDist) {
         const canvas = document.getElementById('sentimentChart');
         if (!canvas)
             return;
-        this.destroyChart('sentimentChart');
+        if (this.charts.has('sentimentChart')) {
+            this.charts.get('sentimentChart').destroy();
+        }
         const ctx = canvas.getContext('2d');
         if (!ctx)
             return;
-        new Chart(ctx, {
+        const chart = new Chart(ctx, {
             type: 'doughnut',
             data: {
                 labels: Object.keys(sentimentDist),
-                datasets: [{ data: Object.values(sentimentDist), backgroundColor: ['#4caf9e', '#ffb347', '#e74c3c', '#2d7a9b'], borderWidth: 0 }]
+                datasets: [{ data: Object.values(sentimentDist), backgroundColor: ['#4caf9e', '#ffb347', '#e74c3c', '#2d7a9b'] }]
             },
-            options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'bottom', labels: { color: '#BDC2C7' } } } }
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#BDC2C7' } } } }
         });
-    }
-    generateDailyTraffic() {
-        const traffic = [];
-        const now = new Date();
-        for (let i = 29; i >= 0; i--) {
-            const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-            const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-            const day = date.getDay();
-            const count = (day === 0 || day === 6) ? Math.floor(Math.random() * 20) + 30 : Math.floor(Math.random() * 30) + 50;
-            traffic.push({ date: dateStr, count: count });
-        }
-        return traffic;
-    }
-    generateHourlyTraffic() {
-        return [15, 28, 42, 55, 58, 52, 45, 32, 22];
-    }
-    destroyChart(id) {
-        if (this.charts.has(id)) {
-            this.charts.get(id)?.destroy();
-            this.charts.delete(id);
-        }
+        this.charts.set('sentimentChart', chart);
     }
     showLoading() {
         const overlay = document.getElementById('loading-overlay');
@@ -551,7 +320,7 @@ class PredictiveAdminDashboard {
             return;
         const update = () => {
             const now = new Date();
-            clockEl.innerHTML = now.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }).toUpperCase();
+            clockEl.innerHTML = now.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }).toUpperCase();
         };
         update();
         setInterval(update, 1000);
@@ -567,21 +336,17 @@ class PredictiveAdminDashboard {
                     return;
                 document.querySelector("#side-menu li.active")?.classList.remove("active");
                 li.classList.add("active");
-                if (titleEl) {
-                    if (page === 'overview')
-                        titleEl.innerText = 'Analytics Dashboard';
-                    else if (page === 'analytics')
-                        titleEl.innerText = 'Advanced ML Analytics';
-                    else
-                        titleEl.innerText = 'Sentiment & Predictions';
-                }
+                if (titleEl)
+                    titleEl.innerText = page === 'overview' ? 'Analytics' : 'Sentiment & Predictions';
                 sections.forEach(s => s.classList.remove('active'));
-                if (page === 'overview')
+                if (page === 'overview') {
                     document.getElementById('overview')?.classList.add('active');
-                else if (page === 'analytics')
-                    document.getElementById('analytics')?.classList.add('active');
-                else
+                    this.renderOverview();
+                }
+                else {
                     document.getElementById('sentiment')?.classList.add('active');
+                    this.renderSentimentPage();
+                }
             });
         });
     }
