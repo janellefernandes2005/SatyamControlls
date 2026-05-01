@@ -18,15 +18,23 @@ app.use(cors({
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// ============ SERVE STATIC FILES FIRST (CRITICAL FIX) ============
-// This must come BEFORE API routes to serve HTML files properly
-app.use(express.static(path.join(__dirname, '..'), {
-    index: false, // We'll handle index ourselves
-    extensions: ['html', 'htm']
-}));
+// ============ SERVE STATIC FILES ============
+app.use(express.static(path.join(__dirname, '..')));
 
-// ============ ROOT ROUTE - Serve home.html ============
-app.get('/', (req, res) => {
+// ============ CRITICAL FIX: Handle all routes ============
+// This serves home.html for root URL and any non-API/non-file routes
+app.get('*', (req, res, next) => {
+    // Skip API routes - let them be handled by their own routers
+    if (req.path.startsWith('/api')) {
+        return next();
+    }
+    
+    // Skip static files with extensions (CSS, JS, images, etc.)
+    if (req.path.match(/\.(css|js|png|jpg|jpeg|gif|svg|ico|json|map)$/)) {
+        return next();
+    }
+    
+    // For everything else, serve home.html (including root URL)
     res.sendFile(path.join(__dirname, '..', 'home.html'));
 });
 
@@ -72,7 +80,7 @@ const contactRoutes = require('./routes/contact');
 const productRoutes = require('./routes/products');
 const trackingRoutes = require('./routes/tracking');
 
-// ============ USE API ROUTES (after static files) ============
+// ============ USE API ROUTES ============
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/contact', contactRoutes);
@@ -239,17 +247,6 @@ app.get('/api/admin/dashboard-data', async (req, res) => {
     }
 });
 
-// ============ CATCH-ALL FOR HTML FILES (FALLBACK) ============
-// This ensures any .html file can be accessed directly
-app.get('*.html', (req, res) => {
-    const filePath = path.join(__dirname, '..', req.path);
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            res.status(404).json({ success: false, message: 'Page not found' });
-        }
-    });
-});
-
 // ============ ERROR HANDLING MIDDLEWARE ============
 app.use((err, req, res, next) => {
     console.error('❌ Server Error:', err.stack);
@@ -260,12 +257,19 @@ app.use((err, req, res, next) => {
     });
 });
 
-// ============ 404 HANDLER - For API routes only ============
-app.use('/api/*', (req, res) => {
-    res.status(404).json({
-        success: false,
-        message: `API endpoint not found: ${req.method} ${req.url}`
-    });
+// ============ 404 HANDLER ============
+app.use((req, res) => {
+    // If it's an API route, return JSON
+    if (req.path.startsWith('/api')) {
+        return res.status(404).json({
+            success: false,
+            message: `API endpoint not found: ${req.method} ${req.path}`
+        });
+    }
+    
+    // For non-API routes, serve home.html (already handled by the catch-all above)
+    // This is just a fallback
+    res.sendFile(path.join(__dirname, '..', 'home.html'));
 });
 
 // ============ START SERVER ============
@@ -280,15 +284,11 @@ const startServer = async () => {
         console.log(`📊 Database: ${dbConnected ? '✅ Connected' : '❌ Failed'}`);
         console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
         console.log(`⏰ Started at: ${new Date().toLocaleString()}`);
-        console.log('=================================\n');
-        
-        // Log available frontend files
-        const fs = require('fs');
-        const frontendFiles = fs.readdirSync(path.join(__dirname, '..')).filter(f => f.endsWith('.html'));
-        console.log('📄 Available frontend files:');
-        frontendFiles.forEach(file => {
-            console.log(`   - http://localhost:${PORT}/${file}`);
-        });
+        console.log('=================================');
+        console.log('🌐 Access your website at:');
+        console.log(`   http://localhost:${PORT}/home.html`);
+        console.log(`   http://localhost:${PORT}/product.html`);
+        console.log(`   http://localhost:${PORT}/contact.html`);
         console.log('=================================\n');
     });
 
