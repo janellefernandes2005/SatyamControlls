@@ -1,4 +1,4 @@
-// details.ts - COMPLETE FIXED VERSION
+// details.ts - FINAL WORKING VERSION
 document.addEventListener('DOMContentLoaded', () => {
     const rawData = localStorage.getItem('selectedProduct');
     if (!rawData) {
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (el) el.textContent = value;
     }
 
-    // Load image from MongoDB
+    // Load image
     const imgEl = document.getElementById('p-img') as HTMLImageElement;
     if (imgEl) {
         imgEl.style.opacity = '0';

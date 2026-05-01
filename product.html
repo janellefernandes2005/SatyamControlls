@@ -202,5 +202,12 @@
     </script>
     <script type="module" src="dist/script.js"></script>
     <script src="chatbot.js"></script>
+    <script>
+    // Check if we need to reload the page (coming from product detail)
+    if (window.location.search.includes('reload=true')) {
+        // Remove the parameter and reload fresh
+        window.location.href = window.location.pathname;
+    }
+</script>
 </body>
 </html>

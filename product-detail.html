@@ -28,7 +28,8 @@
 <body>
     <div class="page-wrapper">
         <div class="immersive-container">
-            <button class="close-btn" onclick="goBackAndRefresh()">
+            <!-- FIXED: Direct navigation to product page with reload flag -->
+            <button class="close-btn" onclick="window.location.href = 'product.html?reload=true'">
                 <i class="fa fa-times"></i> CLOSE
             </button>
             <div class="visual-panel"><img id="p-img" src="" alt="Product"></div>
@@ -47,20 +48,5 @@
     <footer><p>&copy; 2026 Satyam Controls.</p></footer>
     
     <script type="module" src="dist/details.js"></script>
-    
-    <!-- FIX: Refresh product page when coming back from detail -->
-    <script>
-        function goBackAndRefresh() {
-            sessionStorage.setItem('needsRefresh', 'true');
-            window.history.back();
-        }
-        
-        if (sessionStorage.getItem('needsRefresh') === 'true') {
-            sessionStorage.removeItem('needsRefresh');
-            setTimeout(() => {
-                location.reload();
-            }, 100);
-        }
-    </script>
 </body>
 </html>
