@@ -19,8 +19,9 @@ app.use(cors({
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// ============ SERVE STATIC FILES ============
-app.use(express.static(path.join(__dirname, '..')));
+// ============ SERVE STATIC FILES FROM BOTH ROOT AND DIST ============
+app.use(express.static(path.join(__dirname, '..')));      // Serve root files (HTML, root JS)
+app.use(express.static(path.join(__dirname, '..', 'dist'))); // Serve dist files (compiled JS)
 
 // ============ CRITICAL FIX: Handle all routes ============
 app.get('*', (req, res, next) => {
@@ -29,15 +30,19 @@ app.get('*', (req, res, next) => {
         return next();
     }
     
-    // Check if requested file exists
-    const filePath = path.join(__dirname, '..', req.path);
+    // Check if requested file exists in root or dist
+    const rootPath = path.join(__dirname, '..', req.path);
+    const distPath = path.join(__dirname, '..', 'dist', req.path);
     
-    // If it's a file that exists (js, css, html, images, etc.), serve it
-    if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-        return res.sendFile(filePath);
+    if (fs.existsSync(rootPath) && fs.statSync(rootPath).isFile()) {
+        return res.sendFile(rootPath);
     }
     
-    // For everything else (root URL, unknown routes), serve home.html
+    if (fs.existsSync(distPath) && fs.statSync(distPath).isFile()) {
+        return res.sendFile(distPath);
+    }
+    
+    // For everything else, serve home.html
     res.sendFile(path.join(__dirname, '..', 'home.html'));
 });
 
@@ -262,15 +267,12 @@ app.use((err, req, res, next) => {
 
 // ============ 404 HANDLER ============
 app.use((req, res) => {
-    // If it's an API route, return JSON
     if (req.path.startsWith('/api')) {
         return res.status(404).json({
             success: false,
             message: `API endpoint not found: ${req.method} ${req.path}`
         });
     }
-    
-    // For non-API routes, serve home.html
     res.sendFile(path.join(__dirname, '..', 'home.html'));
 });
 
@@ -289,9 +291,6 @@ const startServer = async () => {
         console.log('=================================');
         console.log('🌐 Access your website at:');
         console.log(`   http://localhost:${PORT}`);
-        console.log(`   http://localhost:${PORT}/home.html`);
-        console.log(`   http://localhost:${PORT}/product.html`);
-        console.log(`   http://localhost:${PORT}/contact.html`);
         console.log('=================================\n');
     });
 
