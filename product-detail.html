@@ -12,6 +12,7 @@
         .page-wrapper { flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px 20px; }
         .immersive-container { width: 95vw; min-height: 80vh; background: var(--color-bg); display: flex; border-radius: 60px; overflow: hidden; box-shadow: -25px -25px 70px var(--shadow-light), 25px 25px 70px var(--shadow-dark); position: relative; }
         .close-btn { position: absolute; top: 40px; right: 50px; padding: 15px 30px; background: var(--color-bg); border-radius: 15px; border: none; cursor: pointer; box-shadow: -5px -5px 12px var(--shadow-light), 5px 5px 12px var(--shadow-dark); font-weight: 800; z-index: 10; }
+        .close-btn:hover { background: var(--dark-jungle); color: white; }
         .visual-panel { flex: 1.2; background: white; display: flex; justify-content: center; align-items: center; padding: 40px; }
         .visual-panel img { width: 80%; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1)); }
         .info-panel { flex: 1; padding: 60px; display: flex; flex-direction: column; justify-content: center; }
@@ -27,7 +28,7 @@
 <body>
     <div class="page-wrapper">
         <div class="immersive-container">
-            <button class="close-btn" onclick="window.history.back()">
+            <button class="close-btn" onclick="goBackAndRefresh()">
                 <i class="fa fa-times"></i> CLOSE
             </button>
             <div class="visual-panel"><img id="p-img" src="" alt="Product"></div>
@@ -44,6 +45,22 @@
         </div>
     </div>
     <footer><p>&copy; 2026 Satyam Controls.</p></footer>
+    
     <script type="module" src="dist/details.js"></script>
+    
+    <!-- FIX: Refresh product page when coming back from detail -->
+    <script>
+        function goBackAndRefresh() {
+            sessionStorage.setItem('needsRefresh', 'true');
+            window.history.back();
+        }
+        
+        if (sessionStorage.getItem('needsRefresh') === 'true') {
+            sessionStorage.removeItem('needsRefresh');
+            setTimeout(() => {
+                location.reload();
+            }, 100);
+        }
+    </script>
 </body>
 </html>
