@@ -305,7 +305,6 @@ const PORT = 5000;
 const startServer = async () => {
     await connectDB();
     app.listen(PORT, '0.0.0.0', () => {
-        console.log(`\n🚀 Server running on port ${PORT}\n`);
     });
 };
 startServer();
