@@ -1,5 +1,4 @@
-// subcategories.ts - SHOWING SUBCATEGORIES FOR EACH MAIN CATEGORY
-// FIXED: Renamed loadSubcategories to loadSubcategoriesPage
+// subcategories.ts - COMPLETE WORKING VERSION WITH FIX
 // ==================== SUBCATEGORIES DATA ====================
 const categoryData = {
     "tube-fittings": {
@@ -412,15 +411,6 @@ const categoryData = {
                 pressure: "Up to 2500 PSI",
                 temperature: "-29°C to 200°C",
                 image: "lift check valve.png"
-            },
-            {
-                id: "tube-fitting-check-valve",
-                name: "Tube Fitting Check Valve",
-                description: "Compact design for instrumentation tubing systems.",
-                material: "Stainless Steel 316",
-                pressure: "Up to 6000 PSI",
-                temperature: "-40°C to 200°C",
-                image: "compression needle valve.png"
             }
         ]
     }
@@ -438,8 +428,8 @@ const getCategoryName = (categoryId) => {
     };
     return categoryNames[categoryId] || categoryId.replace(/-/g, ' ');
 };
-// FIXED: Renamed from loadSubcategories to loadSubcategoriesPage
-const loadSubcategoriesPage = () => {
+// Load subcategories
+const loadSubcategories = () => {
     console.log('📡 Loading subcategories...');
     // Get category from URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -462,7 +452,7 @@ const loadSubcategoriesPage = () => {
 };
 // Display subcategories in grid
 const displaySubcategories = (subcategories) => {
-    const grid = document.getElementById('subcategories-grid');
+    const grid = document.getElementById('products-grid-view');
     if (!grid)
         return;
     // Show loading initially
@@ -470,11 +460,10 @@ const displaySubcategories = (subcategories) => {
     setTimeout(() => {
         // Create subcategory cards
         grid.innerHTML = subcategories.map(subcategory => {
-            // Try to get image from MongoDB first, then fallback to placeholder
-            const imageUrl = `http://localhost:8000/api/products/image?name=${encodeURIComponent(subcategory.image)}`;
+            const imageUrl = `/api/products/image/${subcategory.id}`;
             const fallbackUrl = `https://via.placeholder.com/600x400/292C36/FFFFFF?text=${encodeURIComponent(subcategory.name)}`;
             return `
-                <div class="subcategory-card" data-subcategory-id="${subcategory.id}">
+                <div class="subcategory-card" data-subcategory-id="${subcategory.id}" data-subcategory-name="${subcategory.name}">
                     <div class="image-container">
                         <img src="${imageUrl}" 
                              alt="${subcategory.name}" 
@@ -483,15 +472,22 @@ const displaySubcategories = (subcategories) => {
                     </div>
                     <div class="subcategory-info">
                         <h3>${subcategory.name}</h3>
+                        <p>${subcategory.description.substring(0, 80)}...</p>
+                        <div class="specs">
+                            <span>🔧 ${subcategory.material}</span>
+                            <span>⚡ ${subcategory.pressure}</span>
+                            <span>🌡️ ${subcategory.temperature}</span>
+                        </div>
                     </div>
                 </div>
             `;
         }).join('');
-        // Add click listeners to view product details
+        // Add click listeners to view product details - WITH THE FIX
         const subcategoryCards = grid.querySelectorAll('.subcategory-card');
         subcategoryCards.forEach(card => {
             card.addEventListener('click', () => {
                 const subcategoryId = card.getAttribute('data-subcategory-id');
+                const subcategoryName = card.getAttribute('data-subcategory-name');
                 const subcategory = subcategories.find(sc => sc.id === subcategoryId);
                 if (subcategory) {
                     // Store subcategory data for detail page
@@ -501,9 +497,11 @@ const displaySubcategories = (subcategories) => {
                         mat: subcategory.material,
                         press: subcategory.pressure,
                         temp: subcategory.temperature,
-                        img: `https://via.placeholder.com/600x400/292C36/FFFFFF?text=${encodeURIComponent(subcategory.name)}`
+                        img: `/api/products/image/${subcategory.id}`
                     };
                     localStorage.setItem('selectedProduct', JSON.stringify(productData));
+                    // ✅ FIX: Set flag before leaving to product detail
+                    sessionStorage.setItem('fromProductDetail', 'true');
                     window.location.href = 'product-detail.html';
                 }
             });
@@ -513,7 +511,7 @@ const displaySubcategories = (subcategories) => {
 };
 // Show message
 const showMessage = (message, isError = false) => {
-    const grid = document.getElementById('subcategories-grid');
+    const grid = document.getElementById('products-grid-view');
     if (!grid)
         return;
     grid.innerHTML = `
@@ -532,8 +530,8 @@ const showMessage = (message, isError = false) => {
             <p style="color: ${isError ? '#856404' : '#6c757d'}; margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6;">
                 ${message}
             </p>
-            <button onclick="window.history.back()" style="
-                background: var(--dark-jungle);
+            <button onclick="window.location.href='product.html'" style="
+                background: var(--dark-jungle, #171F22);
                 color: white;
                 border: none;
                 padding: 12px 24px;
@@ -555,6 +553,14 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'product.html';
         });
     }
-    // FIXED: Updated function call
-    loadSubcategoriesPage();
+    // ✅ FIX: Check if we're coming back from product detail - force reload
+    if (sessionStorage.getItem('fromProductDetail') === 'true') {
+        sessionStorage.removeItem('fromProductDetail');
+        console.log('🔄 Coming back from product detail, reloading subcategories...');
+        // Small delay to ensure clean reload
+        setTimeout(() => {
+            location.reload();
+        }, 50);
+    }
+    loadSubcategories();
 });
