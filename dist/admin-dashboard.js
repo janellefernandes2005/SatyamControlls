@@ -1,4 +1,4 @@
-// admin-dashboard.ts - YOUR EXACT ORIGINAL, ONLY 2 URLS FIXED
+// admin-dashboard.ts - FULL ORIGINAL WITH ONLY ML URL FIXED
 class PredictiveAdminDashboard {
     constructor() {
         this.mlData = null;
@@ -29,7 +29,6 @@ class PredictiveAdminDashboard {
             let inquiries = [];
             let clickstream = [];
             let products = [];
-            // 🔥 ONLY CHANGE #1: Removed 'http://localhost:8000' - using relative path
             try {
                 const visitorsRes = await fetch('/api/tracking/analytics', { headers });
                 if (visitorsRes.ok) {
@@ -62,8 +61,8 @@ class PredictiveAdminDashboard {
                 }
             }
             catch (e) { }
-            // 🔥 ONLY CHANGE #2: Removed 'http://localhost:8002' - using relative path
-            const response = await fetch('/api/admin/analyze', {
+            // ✅ ONLY CHANGE - Point to Render ML service
+            const response = await fetch('https://satyam-ml.onrender.com/api/admin/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ visitors, inquiries, clickstream, products })

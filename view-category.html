@@ -15,10 +15,11 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background: var(--bg-page, #f5f5f5);
+            background: #f5f5f5;
             min-height: 100vh;
         }
 
+        /* Navbar */
         nav {
             display: flex;
             justify-content: flex-end;
@@ -42,6 +43,11 @@
             text-decoration: none;
             color: #171F22;
             font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #2d7a9b;
         }
 
         .admin-btn {
@@ -49,8 +55,15 @@
             color: white !important;
             padding: 10px 22px;
             border-radius: 30px;
+            transition: all 0.3s ease;
         }
 
+        .admin-btn:hover {
+            background: #2d7a9b;
+            transform: scale(1.05);
+        }
+
+        /* Container */
         .container {
             padding-top: 100px;
             padding-bottom: 50px;
@@ -60,6 +73,7 @@
             padding-right: 20px;
         }
 
+        /* Back Button */
         .back-btn {
             background: #171F22;
             color: white;
@@ -72,65 +86,105 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            transition: all 0.3s ease;
         }
 
         .back-btn:hover {
             background: #2d7a9b;
+            transform: translateX(-5px);
         }
 
+        /* Title */
         h1 {
             font-family: 'Exo 2', sans-serif;
             font-size: 2rem;
             margin-bottom: 30px;
             color: #171F22;
+            border-left: 4px solid #2d7a9b;
+            padding-left: 15px;
         }
 
+        /* Products Grid - 3x2 BIG CARDS */
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 30px;
         }
 
+        /* Product Card - BIG SIZE */
         .product-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
             cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
         }
 
+        /* Image Container - BIG */
         .image-container {
-            height: 200px;
+            height: 240px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             padding: 20px;
         }
 
         .image-container img {
             max-width: 100%;
-            max-height: 100%;
+            max-height: 200px;
             object-fit: contain;
+            transition: transform 0.3s ease;
         }
 
+        .product-card:hover .image-container img {
+            transform: scale(1.05);
+        }
+
+        /* Product Info */
         .product-info {
             padding: 20px;
             text-align: center;
         }
 
         .product-info h3 {
-            font-size: 16px;
-            color: #171F22;
+            font-size: 18px;
+            font-weight: 600;
             margin-bottom: 8px;
+            color: #171F22;
         }
 
+        .product-info p {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .view-details-btn {
+            background: #2d7a9b;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .view-details-btn:hover {
+            background: #1f5a73;
+            transform: scale(1.05);
+        }
+
+        /* Footer */
         footer {
             background: #171F22;
             color: #C1D1CF;
@@ -138,9 +192,41 @@
             padding: 30px;
             margin-top: 50px;
         }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .container {
+                padding-top: 80px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Navigation -->
     <nav>
         <ul class="nav-links">
             <li><a href="home.html">Home</a></li>
@@ -150,52 +236,46 @@
         </ul>
     </nav>
 
+    <!-- Main Content -->
     <div class="container">
         <button class="back-btn" onclick="goBackToProducts()">
             <i class="fas fa-arrow-left"></i> Back to Categories
         </button>
         <h1 id="display-title">Loading...</h1>
         <div class="products-grid" id="products-grid-view">
-            <div style="text-align: center; padding: 50px;">Loading products...</div>
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Loading products...
+            </div>
         </div>
     </div>
 
+    <!-- Footer -->
     <footer>
         <p>&copy; 2026 Satyam Controls. All Rights Reserved.</p>
     </footer>
 
+    <!-- Scripts -->
     <script type="module" src="dist/subcategories.js"></script>
     
-    <!-- FIX: Force reload when coming back from product detail -->
     <script>
         function goBackToProducts() {
-            // Clear any stored product data
-            localStorage.removeItem('selectedProduct');
-            // Navigate directly to products page (full reload)
+            sessionStorage.removeItem('currentSubcategory');
+            sessionStorage.removeItem('needsGridReload');
             window.location.href = 'product.html';
         }
         
-        // Check if we're coming back from product detail
-        if (sessionStorage.getItem('fromProductDetail') === 'true') {
-            sessionStorage.removeItem('fromProductDetail');
-            // Reload the subcategories
-            location.reload();
+        // Save current category when page loads
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentCategory = urlParams.get('cat');
+        if (currentCategory) {
+            sessionStorage.setItem('currentSubcategory', currentCategory);
+        }
+        
+        // Check if we need to reload the grid (coming back from product detail)
+        if (sessionStorage.getItem('needsGridReload') === 'true') {
+            sessionStorage.removeItem('needsGridReload');
+            console.log('🔄 Coming back from product detail, reloading grid...');
         }
     </script>
-    <script>
-    // Save current category when page loads
-    const urlParams = new URLSearchParams(window.location.search);
-    const currentCategory = urlParams.get('cat');
-    if (currentCategory) {
-        sessionStorage.setItem('currentSubcategory', currentCategory);
-    }
-    
-    // Check if we need to reload the grid (coming back from product detail)
-    if (sessionStorage.getItem('needsGridReload') === 'true') {
-        sessionStorage.removeItem('needsGridReload');
-        console.log('🔄 Reloading subcategories grid...');
-        // The grid will be reloaded by the TypeScript file
-    }
-</script>
 </body>
 </html>

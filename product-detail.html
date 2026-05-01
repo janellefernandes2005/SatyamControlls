@@ -7,68 +7,173 @@
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --dark-jungle: #171F22; --color-bg: #E4EBF1; --shadow-light: rgba(255, 255, 255, 0.9); --shadow-dark: rgba(22, 27, 29, 0.2); --jet-stream: #C1D1CF; --granite-gray: #636467; }
-        body { margin: 0; background: var(--color-bg); font-family: 'Montserrat', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
-        .page-wrapper { flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px 20px; }
-        .immersive-container { width: 95vw; min-height: 80vh; background: var(--color-bg); display: flex; border-radius: 60px; overflow: hidden; box-shadow: -25px -25px 70px var(--shadow-light), 25px 25px 70px var(--shadow-dark); position: relative; }
-        .close-btn { position: absolute; top: 40px; right: 50px; padding: 15px 30px; background: var(--color-bg); border-radius: 15px; border: none; cursor: pointer; box-shadow: -5px -5px 12px var(--shadow-light), 5px 5px 12px var(--shadow-dark); font-weight: 800; z-index: 10; }
-        .close-btn:hover { background: var(--dark-jungle); color: white; }
-        .visual-panel { flex: 1.2; background: white; display: flex; justify-content: center; align-items: center; padding: 40px; }
-        .visual-panel img { width: 80%; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1)); }
-        .info-panel { flex: 1; padding: 60px; display: flex; flex-direction: column; justify-content: center; }
-        .info-panel h1 { font-family: 'Exo 2'; font-size: 3rem; margin-bottom: 20px; text-transform: uppercase; }
-        .description-text { font-size: 1.1rem; line-height: 1.6; color: var(--granite-gray); border-left: 5px solid var(--jet-stream); padding-left: 20px; margin-bottom: 30px; }
-        .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .spec-tile { padding: 20px; background: var(--color-bg); border-radius: 20px; box-shadow: inset -5px -5px 10px var(--shadow-light), inset 5px 5px 10px var(--shadow-dark); }
-        .spec-tile label { display: block; font-size: 0.7rem; font-weight: 800; color: var(--granite-gray); margin-bottom: 5px; }
-        footer { background: var(--dark-jungle); color: white; padding: 20px; text-align: center; }
-        @media (max-width: 1000px) { .immersive-container { flex-direction: column; } .visual-panel { height: 400px; } }
+        :root { 
+            --dark-jungle: #171F22; 
+            --color-bg: #E4EBF1; 
+            --shadow-light: rgba(255, 255, 255, 0.9); 
+            --shadow-dark: rgba(22, 27, 29, 0.2); 
+            --jet-stream: #C1D1CF; 
+            --granite-gray: #636467; 
+        }
+        body { 
+            margin: 0; 
+            background: var(--color-bg); 
+            font-family: 'Montserrat', sans-serif; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .page-wrapper { 
+            flex: 1; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 40px 20px; 
+        }
+        .immersive-container { 
+            width: 95vw; 
+            min-height: 80vh; 
+            background: var(--color-bg); 
+            display: flex; 
+            border-radius: 60px; 
+            overflow: hidden; 
+            box-shadow: -25px -25px 70px var(--shadow-light), 25px 25px 70px var(--shadow-dark); 
+            position: relative; 
+        }
+        .close-btn { 
+            position: absolute; 
+            top: 40px; 
+            right: 50px; 
+            padding: 15px 30px; 
+            background: var(--color-bg); 
+            border-radius: 15px; 
+            border: none; 
+            cursor: pointer; 
+            box-shadow: -5px -5px 12px var(--shadow-light), 5px 5px 12px var(--shadow-dark); 
+            font-weight: 800; 
+            z-index: 10; 
+            transition: all 0.3s ease;
+        }
+        .close-btn:hover { 
+            background: var(--dark-jungle); 
+            color: white; 
+            transform: scale(1.05);
+        }
+        .visual-panel { 
+            flex: 1.2; 
+            background: white; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 40px; 
+        }
+        .visual-panel img { 
+            width: 80%; 
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1)); 
+        }
+        .info-panel { 
+            flex: 1; 
+            padding: 60px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+        }
+        .info-panel h1 { 
+            font-family: 'Exo 2'; 
+            font-size: 3rem; 
+            margin-bottom: 20px; 
+            text-transform: uppercase; 
+        }
+        .description-text { 
+            font-size: 1.1rem; 
+            line-height: 1.6; 
+            color: var(--granite-gray); 
+            border-left: 5px solid var(--jet-stream); 
+            padding-left: 20px; 
+            margin-bottom: 30px; 
+        }
+        .specs-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px; 
+        }
+        .spec-tile { 
+            padding: 20px; 
+            background: var(--color-bg); 
+            border-radius: 20px; 
+            box-shadow: inset -5px -5px 10px var(--shadow-light), inset 5px 5px 10px var(--shadow-dark); 
+        }
+        .spec-tile label { 
+            display: block; 
+            font-size: 0.7rem; 
+            font-weight: 800; 
+            color: var(--granite-gray); 
+            margin-bottom: 5px; 
+        }
+        footer { 
+            background: var(--dark-jungle); 
+            color: white; 
+            padding: 20px; 
+            text-align: center; 
+        }
+        @media (max-width: 1000px) { 
+            .immersive-container { 
+                flex-direction: column; 
+            } 
+            .visual-panel { 
+                height: 400px; 
+            } 
+        }
     </style>
 </head>
 <body>
     <div class="page-wrapper">
         <div class="immersive-container">
-            <!-- FIXED: Returns to the SAME subcategory page -->
             <button class="close-btn" onclick="goBackToSubcategory()">
                 <i class="fa fa-times"></i> CLOSE
             </button>
-            <div class="visual-panel"><img id="p-img" src="" alt="Product"></div>
+            <div class="visual-panel">
+                <img id="p-img" src="" alt="Product">
+            </div>
             <div class="info-panel">
                 <h1 id="p-name">Loading...</h1>
                 <p class="description-text" id="p-desc">Loading details...</p>
                 <div class="specs-grid">
-                    <div class="spec-tile"><label>MATERIAL</label><span id="p-mat">-</span></div>
-                    <div class="spec-tile"><label>PRESSURE</label><span id="p-press">-</span></div>
-                    <div class="spec-tile"><label>TEMPERATURE</label><span id="p-temp">-</span></div>
-                    <div class="spec-tile"><label>GRADE</label><span>INDUSTRIAL</span></div>
+                    <div class="spec-tile">
+                        <label>MATERIAL</label>
+                        <span id="p-mat">-</span>
+                    </div>
+                    <div class="spec-tile">
+                        <label>PRESSURE</label>
+                        <span id="p-press">-</span>
+                    </div>
+                    <div class="spec-tile">
+                        <label>TEMPERATURE</label>
+                        <span id="p-temp">-</span>
+                    </div>
+                    <div class="spec-tile">
+                        <label>GRADE</label>
+                        <span>INDUSTRIAL</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <footer><p>&copy; 2026 Satyam Controls.</p></footer>
+    <footer>
+        <p>&copy; 2026 Satyam Controls.</p>
+    </footer>
     
     <script type="module" src="dist/details.js"></script>
     
     <script>
         function goBackToSubcategory() {
-            // Get the saved category from sessionStorage
             const savedCategory = sessionStorage.getItem('currentSubcategory');
             if (savedCategory) {
-                // Go back to the same subcategory page with reload flag
-                window.location.href = `view-category.html?cat=${savedCategory}&reload=true`;
+                sessionStorage.setItem('needsGridReload', 'true');
+                window.location.href = `view-category.html?cat=${savedCategory}`;
             } else {
-                // Fallback to products page
                 window.location.href = 'product.html';
             }
-        }
-        
-        // Check if we're coming back from product detail and need to reload
-        if (sessionStorage.getItem('needsGridReload') === 'true') {
-            sessionStorage.removeItem('needsGridReload');
-            // Force reload the page to refresh the grid
-            setTimeout(() => {
-                location.reload();
-            }, 50);
         }
     </script>
 </body>
