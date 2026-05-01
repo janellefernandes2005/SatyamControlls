@@ -1,4 +1,4 @@
-// admin-dashboard.ts - Complete with K-Means Cluster, Heatmap, and all visualizations
+// admin-dashboard.ts - YOUR EXACT ORIGINAL, ONLY 2 URLS FIXED
 class PredictiveAdminDashboard {
     constructor() {
         this.mlData = null;
@@ -29,8 +29,9 @@ class PredictiveAdminDashboard {
             let inquiries = [];
             let clickstream = [];
             let products = [];
+            // 🔥 ONLY CHANGE #1: Removed 'http://localhost:8000' - using relative path
             try {
-                const visitorsRes = await fetch('http://localhost:8000/api/tracking/analytics', { headers });
+                const visitorsRes = await fetch('/api/tracking/analytics', { headers });
                 if (visitorsRes.ok) {
                     const data = await visitorsRes.json();
                     visitors = data.visitors || [];
@@ -38,7 +39,7 @@ class PredictiveAdminDashboard {
             }
             catch (e) { }
             try {
-                const inquiriesRes = await fetch('http://localhost:8000/api/contact/all', { headers });
+                const inquiriesRes = await fetch('/api/contact/all', { headers });
                 if (inquiriesRes.ok) {
                     const data = await inquiriesRes.json();
                     inquiries = data.inquiries || [];
@@ -46,7 +47,7 @@ class PredictiveAdminDashboard {
             }
             catch (e) { }
             try {
-                const clickstreamRes = await fetch('http://localhost:8000/api/tracking/analytics', { headers });
+                const clickstreamRes = await fetch('/api/tracking/analytics', { headers });
                 if (clickstreamRes.ok) {
                     const data = await clickstreamRes.json();
                     clickstream = data.clickstream || [];
@@ -54,14 +55,15 @@ class PredictiveAdminDashboard {
             }
             catch (e) { }
             try {
-                const productsRes = await fetch('http://localhost:8000/api/products', { headers });
+                const productsRes = await fetch('/api/products', { headers });
                 if (productsRes.ok) {
                     products = await productsRes.json();
                     this.updateInventoryCounts(products);
                 }
             }
             catch (e) { }
-            const response = await fetch('http://localhost:8002/api/admin/analyze', {
+            // 🔥 ONLY CHANGE #2: Removed 'http://localhost:8002' - using relative path
+            const response = await fetch('/api/admin/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ visitors, inquiries, clickstream, products })
